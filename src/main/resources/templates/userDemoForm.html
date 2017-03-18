@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+<h1>Hello World!</h1>
+<!--/*@thymesVar id="user" type="com.gloomy.beans.User"*/-->
+<form action="#" th:action="@{/v1/api/addUser}" th:object="${user}" method="post">
+    <label>Username: <input type="text" th:field="*{username}"/></label>
+    <label>Password: <input type="password" th:field="*{password}"/></label>
+    <label>Fullname: <input type="text" th:field="*{fullname}"/></label>
+    <button type="submit" name="submit" value="Submit">Submit</button>
+</form>
+<table>
+    <thead>
+    <p>Shit</p>
+    </thead>
+    <tbody>
+    <tr>
+        <th>Id</th>
+        <th>Username</th>
+        <th>Fullname</th>
+        <th>Point</th>
+        <th>Avatar</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    <!--/*@thymesVar id="users" type="java.util.List"*/-->
+    <tr th:each="item:${users}">
+        <!--/*@thymesVar id="item" type="com.gloomy.beans.User"*/-->
+        <td th:text="${item.userId}"></td>
+        <td th:text="${item.username}"></td>
+        <td th:text="${item.fullname}"></td>
+        <td th:text="${item.point}"></td>
+        <td th:text="${item.avatar}"></td>
+        <td><a th:href="@{/v1/api/{id}(id=${item.getUserId()})}">Edit</a></td>
+        <td><a th:href="@{/v1/api/deleteUser/{id}(id=${item.getUserId()})}">Delete</a></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
