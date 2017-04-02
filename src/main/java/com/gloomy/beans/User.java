@@ -1,5 +1,6 @@
 package com.gloomy.beans;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,16 +17,24 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 public class User {
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id")
+    @JsonIgnore
+    private Role role;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private int userId;
+    private Long userId;
     @NotNull
     @Column(name = "username")
     private String username;
     @NotNull
     @Column(name = "password")
     private String password;
+    @NotNull
+    @Column(name = "email")
+    private String email;
     @Column(name = "fullname")
     private String fullname;
     @Column(name = "point")
