@@ -1,5 +1,6 @@
 package com.gloomy.beans;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,6 +24,7 @@ public class Authority implements GrantedAuthority {
     @Column(name = "authority_value")
     private String authorityValue;
     @ManyToMany
+    @JsonIgnore
     @JoinTable(name = "role_authority", joinColumns = {@JoinColumn(name = "authority_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private List<Role> roles;

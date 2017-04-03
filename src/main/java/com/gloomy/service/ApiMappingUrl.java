@@ -30,4 +30,11 @@ public class ApiMappingUrl {
      * Endpoint URL
      */
     public static final String MY_PROFILE_ENDPOINT = "/profile";
+    public static final String FOOD_ENDPOINT = "/food";
+    public static final String PLACE_ENDPOINT = "/place";
+
+    /**
+     * RestService For App URL
+     */
+    public static final String HOME = "/home";
 }

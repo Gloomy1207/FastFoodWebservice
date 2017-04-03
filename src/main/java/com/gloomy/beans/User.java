@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 /**
  * Copyright © 2017 Gloomy
@@ -21,6 +22,16 @@ public class User {
     @JoinColumn(name = "role_id")
     @JsonIgnore
     private Role role;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @JoinColumn(name = "user_id")
+    private Set<FoodRating> foodRating;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private Set<PlaceRating> placeRatings;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
