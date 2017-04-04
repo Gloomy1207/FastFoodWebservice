@@ -23,7 +23,7 @@ public class Authority implements GrantedAuthority {
     private int authorityId;
     @Column(name = "authority_value")
     private String authorityValue;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JsonIgnore
     @JoinTable(name = "role_authority", joinColumns = {@JoinColumn(name = "authority_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")})

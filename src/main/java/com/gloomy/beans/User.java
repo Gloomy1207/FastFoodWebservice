@@ -52,4 +52,9 @@ public class User {
     private int point;
     @Column(name = "avatar")
     private String avatar;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_favorite", joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "place_id")})
+    private Set<Place> places;
 }

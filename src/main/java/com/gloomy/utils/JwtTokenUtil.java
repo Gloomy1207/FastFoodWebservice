@@ -1,6 +1,7 @@
 package com.gloomy.utils;
 
 import com.gloomy.security.JwtUser;
+import com.gloomy.security.SecurityConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -26,7 +27,6 @@ public final class JwtTokenUtil implements Serializable {
     private static final String CLAIM_KEY_CREATED = "created";
     private static final String CLAIM_KEY_EMAIL = "email";
     private static final String CLAIM_KEY_URL = "url";
-    private static final String CLAIM_KEY_PASSWORD = "password";
 
     private static final String AUDIENCE_UNKNOWN = "unknown";
     private static final String AUDIENCE_WEB = "web";
@@ -40,7 +40,18 @@ public final class JwtTokenUtil implements Serializable {
     private Long mExpirationTime;
 
     public String getUsernameFromToken(String token) {
-        return getClaimsFromToken(token).getSubject();
+        String username;
+        try {
+            final Claims claims = getClaimsFromToken(token);
+            username = claims.getSubject();
+            if (TextUtils.isEmpty(username)) {
+                username = (String) claims.get(CLAIM_KEY_USERNAME);
+            }
+        } catch (Exception e) {
+            System.out.println("getUsernameFromToken " + e.getMessage());
+            username = null;
+        }
+        return username;
     }
 
     public String getEmailFromToken(String token) {
@@ -49,10 +60,6 @@ public final class JwtTokenUtil implements Serializable {
 
     public String getUrlFromToken(String token) {
         return (String) getClaimsFromToken(token).get(CLAIM_KEY_URL);
-    }
-
-    public String getPasswordFromToken(String token) {
-        return (String) getClaimsFromToken(token).get(CLAIM_KEY_PASSWORD);
     }
 
     public String getCreatedDateFromToken(String token) {
@@ -65,10 +72,18 @@ public final class JwtTokenUtil implements Serializable {
 
     private Claims getClaimsFromToken(String token) {
         Claims claims;
-        claims = Jwts.parser()
-                .setSigningKey(mSecret)
-                .parseClaimsJws(token)
-                .getBody();
+        if (token.contains(SecurityConstants.TOKEN_PREFIX)) {
+            token = token.substring(SecurityConstants.TOKEN_PREFIX.length());
+        }
+        try {
+            claims = Jwts.parser()
+                    .setSigningKey(mSecret)
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
+            System.out.println("getClaimsFromToken" + e.getMessage());
+            claims = null;
+        }
         return claims;
     }
 
@@ -87,7 +102,6 @@ public final class JwtTokenUtil implements Serializable {
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
-        claims.put(CLAIM_KEY_PASSWORD, userDetails.getPassword());
         claims.put(CLAIM_KEY_AUDIENCE, generateAudience());
         claims.put(CLAIM_KEY_CREATED, new Date());
         return generateToken(claims);
@@ -101,10 +115,9 @@ public final class JwtTokenUtil implements Serializable {
                 .compact();
     }
 
-    public String generateToken(String email, String username, String password) {
+    public String generateToken(String email, String username) {
         Map<String, Object> claims = new HashMap<>();
         claims.put(CLAIM_KEY_USERNAME, username);
-        claims.put(CLAIM_KEY_PASSWORD, password);
         claims.put(CLAIM_KEY_EMAIL, email);
         claims.put(CLAIM_KEY_CREATED, new Date());
         return generateToken(claims);

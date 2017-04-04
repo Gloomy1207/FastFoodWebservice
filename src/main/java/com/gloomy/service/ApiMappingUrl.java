@@ -22,17 +22,13 @@ public class ApiMappingUrl {
     public static final String REGISTER_USER_API_URL = "/register";
 
     /**
-     * Component URL
-     */
-    public static final String USER_API_URL = "/user";
-
-    /**
      * Endpoint URL
      */
     public static final String MY_PROFILE_ENDPOINT = "/profile";
     public static final String FOOD_ENDPOINT = "/food";
     public static final String PLACE_ENDPOINT = "/place";
     public static final String LOCATION_ENDPOINT = "/location";
+    public static final String USER_ENDPOINT = "/user";
 
     /**
      * RestService For App URL

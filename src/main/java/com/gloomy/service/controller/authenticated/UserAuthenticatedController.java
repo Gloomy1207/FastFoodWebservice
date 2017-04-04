@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
  * Created by Gloomy on 25-Mar-17.
  */
 @RestController
-@RequestMapping(name = (ApiMappingUrl.API_AUTH_URL + ApiMappingUrl.USER_API_URL))
+@RequestMapping(name = (ApiMappingUrl.API_AUTH_URL + ApiMappingUrl.USER_ENDPOINT))
 public class UserAuthenticatedController {
 
     private final UserDAO mUserDAO;
