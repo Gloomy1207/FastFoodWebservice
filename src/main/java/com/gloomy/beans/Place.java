@@ -1,6 +1,5 @@
 package com.gloomy.beans;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -43,12 +42,9 @@ public class Place {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_type_id")
-    @JsonIgnore
     private PlaceType placeType;
 
-    @Transient
-    private String placeTypeName;
-
-    @Transient
-    private int placeTypeId;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "place_id")
+    private PlaceAddress placeAddress;
 }

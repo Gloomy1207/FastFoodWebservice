@@ -16,22 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(ApiMappingUrl.API_BASIC_URL + ApiMappingUrl.PLACE_ENDPOINT)
-public class PlaceBaseServiceController {
+public class PlaceBasicServiceController {
 
     private final PlaceDAO mPlaceDAO;
 
     @Autowired
-    public PlaceBaseServiceController(PlaceDAO mPlaceDAO) {
+    public PlaceBasicServiceController(PlaceDAO mPlaceDAO) {
         this.mPlaceDAO = mPlaceDAO;
     }
 
     @GetMapping(value = ApiMappingUrl.HOME)
     public Page<Place> getDataForHome(Pageable pageable) {
-        Page<Place> places = mPlaceDAO.findAll(pageable);
-        for (Place place : places) {
-            place.setPlaceTypeName(place.getPlaceType().getTypeName());
-            place.setPlaceTypeId(place.getPlaceType().getPlaceTypeId());
-        }
-        return places;
+        return mPlaceDAO.findAll(pageable);
     }
 }
