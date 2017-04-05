@@ -10,7 +10,7 @@ import javax.persistence.*;
  * Created by Gloomy on 02-Apr-17.
  */
 @Entity
-@Table(name = "foodrating")
+@Table(name = "food_rating")
 @Setter
 @Getter
 public class FoodRating {

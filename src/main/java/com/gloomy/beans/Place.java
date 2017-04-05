@@ -54,4 +54,19 @@ public class Place {
     @JoinTable(name = "user_favorite", joinColumns = {@JoinColumn(name = "place_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private Set<User> users;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "place_id")
+    @JsonIgnore
+    private Set<FoodPrice> prices;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "place_id")
+    @JsonIgnore
+    private Set<PlaceComment> comments;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "place_id")
+    @JsonIgnore
+    private Set<PlaceFood> foods;
 }

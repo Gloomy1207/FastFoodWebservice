@@ -1,6 +1,5 @@
 package com.gloomy.beans;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,22 +7,25 @@ import javax.persistence.*;
 
 /**
  * Copyright © 2017 Gloomy
- * Created by Gloomy on 02-Apr-17.
+ * Created by Gloomy on 05/04/2017.
  */
+@Entity
+@Table(name = "food_price")
 @Getter
 @Setter
-@Table(name = "food_image")
-@Entity
-public class FoodImage {
+public class FoodPrice {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @Column(name = "image_path")
-    private String imagePath;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "food_id")
-    @JsonIgnore
     private Food food;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "place_id")
+    private Place place;
+
+    @Column(name = "average_price")
+    private double price;
 }

@@ -1,6 +1,7 @@
 package com.gloomy.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,24 +38,57 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long userId;
+
     @NotNull
     @Column(name = "username")
     private String username;
+
     @NotNull
     @Column(name = "password")
+    @JsonIgnore
     private String password;
+
     @NotNull
     @Column(name = "email")
     private String email;
+
     @Column(name = "fullname")
     private String fullname;
+
     @Column(name = "point")
     private int point;
+
     @Column(name = "avatar")
     private String avatar;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_favorite", joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "place_id")})
-    private Set<Place> places;
+    @JsonProperty("user_favorite_places")
+    private Set<Place> userFavoritePlaces;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private Set<PlaceComment> placeComments;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private Set<PostLike> postLikes;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private Set<PostComment> postComments;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private Set<PostReply> postReplies;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private Set<PlaceReply> placeReplies;
 }

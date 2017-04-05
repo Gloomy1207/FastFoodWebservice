@@ -11,7 +11,7 @@ import javax.persistence.*;
  * Created by Gloomy on 03-Apr-17.
  */
 @Entity
-@Table(name = "placeimage")
+@Table(name = "place_image")
 @Setter
 @Getter
 public class PlaceImage {

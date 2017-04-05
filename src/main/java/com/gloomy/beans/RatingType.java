@@ -13,7 +13,7 @@ import java.util.Set;
  * Created by Gloomy on 03-Apr-17.
  */
 @Entity
-@Table(name = "ratingtype")
+@Table(name = "rating_type")
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

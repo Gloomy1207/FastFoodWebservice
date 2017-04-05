@@ -12,7 +12,7 @@ import javax.persistence.*;
  * Created by Gloomy on 04/04/2017.
  */
 @Entity
-@Table(name = "placeaddress")
+@Table(name = "place_address")
 @Setter
 @Getter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

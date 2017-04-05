@@ -40,7 +40,7 @@ public class UserBasicServiceController {
         String token = request.getHeader(SecurityConstants.TOKEN_HEADER_NAME);
         User user = mUserDAO.findUserByUsername(mJwtTokenUtil.getUsernameFromToken(token));
         List<Place> places = new ArrayList<>();
-        places.addAll(user.getPlaces());
+        places.addAll(user.getUserFavoritePlaces());
         return new PageImpl<>(places, pageable, places.size());
     }
 }

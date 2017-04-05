@@ -8,22 +8,26 @@ import javax.persistence.*;
 
 /**
  * Copyright © 2017 Gloomy
- * Created by Gloomy on 02-Apr-17.
+ * Created by Gloomy on 05/04/2017.
  */
-@Getter
-@Setter
-@Table(name = "food_image")
 @Entity
-public class FoodImage {
+@Table(name = "place_food")
+@Setter
+@Getter
+public class PlaceFood {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @Column(name = "image_path")
-    private String imagePath;
+    @Column(name = "local_name")
+    private String localName;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "place_id")
+    @JsonIgnore
+    private Place place;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "food_id")
-    @JsonIgnore
     private Food food;
 }

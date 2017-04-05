@@ -39,6 +39,16 @@ public class Food {
     @JsonIgnore
     private Set<FoodRating> foodRatings;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "food_id")
+    @JsonIgnore
+    private Set<FoodPrice> prices;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "food_id")
+    @JsonIgnore
+    private Set<PlaceFood> placeFoods;
+
     @Transient
     private float rating;
     @Transient
