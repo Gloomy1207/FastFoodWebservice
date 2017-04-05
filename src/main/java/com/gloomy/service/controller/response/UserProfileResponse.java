@@ -1,5 +1,6 @@
 package com.gloomy.service.controller.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.gloomy.beans.User;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,7 @@ import java.io.Serializable;
  */
 @Getter
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserProfileResponse implements Serializable {
 
     private static final long serialVersionUID = 290144058402724557L;
