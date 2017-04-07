@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -34,4 +35,18 @@ public class City {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
     private Set<Province> provinces;
+
+    @Transient
+    public Set<Province> getFirstFiveProvince() {
+        int i = 0;
+        Set<Province> result = new HashSet<>();
+        for (Province province : provinces) {
+            result.add(province);
+            i++;
+            if (i == 5) {
+                break;
+            }
+        }
+        return result;
+    }
 }

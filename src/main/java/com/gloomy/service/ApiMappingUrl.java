@@ -34,4 +34,6 @@ public class ApiMappingUrl {
      * RestService For App URL
      */
     public static final String HOME = "/home";
+    public static final String SEARCH = "/search";
+    public static final String TOPIC_ENDPOINT = "/topic";
 }

@@ -75,17 +75,17 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonIgnore
-    private Set<PostLike> postLikes;
+    private Set<TopicLike> topicLikes;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonIgnore
-    private Set<PostComment> postComments;
+    private Set<TopicComment> topicComments;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonIgnore
-    private Set<PostReply> postReplies;
+    private Set<TopicReply> postReplies;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

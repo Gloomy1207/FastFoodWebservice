@@ -1,15 +1,17 @@
 package com.gloomy.service.controller.basic;
 
 import com.gloomy.beans.Food;
-import com.gloomy.beans.FoodRating;
-import com.gloomy.dao.FoodDAO;
+import com.gloomy.impl.FoodDAOImpl;
 import com.gloomy.service.ApiMappingUrl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Copyright © 2017 Gloomy
@@ -18,32 +20,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(ApiMappingUrl.API_BASIC_URL + ApiMappingUrl.FOOD_ENDPOINT)
 public class FoodBasicServiceController {
-
-    private final FoodDAO mFoodDAO;
+    private final FoodDAOImpl mFoodDAOImpl;
 
     @Autowired
-    public FoodBasicServiceController(FoodDAO mFoodDAO) {
-        this.mFoodDAO = mFoodDAO;
+    public FoodBasicServiceController(FoodDAOImpl mFoodDAOImpl) {
+        this.mFoodDAOImpl = mFoodDAOImpl;
     }
 
     @GetMapping(value = ApiMappingUrl.HOME)
     public Page<Food> getDataForHome(Pageable pageable) {
-        Page<Food> foods = mFoodDAO.findAll(pageable);
-        for (Food food : foods) {
-            food.setRating(getFoodRating(food));
-            food.setNumberOfRating(food.getFoodRatings().size());
-        }
-        return foods;
+        return mFoodDAOImpl.findAll(pageable);
     }
 
-    private float getFoodRating(Food food) {
-        int total = 0;
-        if (food != null && food.getFoodRatings() != null && food.getFoodRatings().size() > 0) {
-            for (FoodRating rating : food.getFoodRatings()) {
-                total += rating.getStar();
-            }
-            return total / food.getFoodRatings().size();
-        }
-        return total;
+    @GetMapping(value = ApiMappingUrl.SEARCH)
+    public Page<Food> getDataForSearch(@RequestParam(name = "lat", required = false) Double lat,
+                                       @RequestParam(name = "lng", required = false) Double lng,
+                                       HttpServletRequest request, Pageable pageable) {
+        return mFoodDAOImpl.findNearFood(lat, lng, request, pageable);
     }
 }
