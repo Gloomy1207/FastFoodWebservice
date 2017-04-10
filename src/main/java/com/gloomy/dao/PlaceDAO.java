@@ -1,6 +1,8 @@
 package com.gloomy.dao;
 
 import com.gloomy.beans.Place;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -23,4 +25,7 @@ public interface PlaceDAO extends JpaRepository<Place, Integer> {
     @Query("SELECT p FROM Place p WHERE (p.description LIKE LOWER(CONCAT('%', ?1, '%') ) ) OR " +
             "(p.placeName LIKE LOWER(CONCAT('%', ?1, '%') ) )")
     Set<Place> searchWithoutTime(String keyword);
+
+    @Query("SELECT p FROM Place p")
+    Page<Place> findPlaceRating(Pageable pageable);
 }

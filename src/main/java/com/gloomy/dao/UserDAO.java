@@ -27,4 +27,7 @@ public interface UserDAO extends JpaRepository<User, Integer> {
             "(u.fullname LIKE LOWER(CONCAT('%', ?1, '%') ) ) OR " +
             "(u.description LIKE LOWER(CONCAT('%', ?1, '%') ) )")
     Set<User> search(String keyword);
+
+    @Query("SELECT u FROM User u ORDER BY u.point")
+    Page<User> findRatingUser(Pageable pageable);
 }
