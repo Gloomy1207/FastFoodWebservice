@@ -29,4 +29,12 @@ public class TopicDAOImpl {
     public Set<Topic> searchTopic(String keyword) {
         return mTopicDAO.search(keyword);
     }
+
+    public Page<Topic> getTopicByThreshold(Pageable pageable, int threshold) {
+        return mTopicDAO.findTopic(threshold, pageable);
+    }
+
+    public Page<Topic> getTopicByRandom(Pageable pageable) {
+        return mTopicDAO.findTopicOrderRandom(pageable);
+    }
 }
