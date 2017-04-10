@@ -12,7 +12,7 @@ public final class ResponseMessageConstant {
     public static final String USER_EXIST_MESSAGE_EN = "Username is exist";
     public static final String USERNAME_EMPTY_MESSAGE_EN = "Username is required";
     public static final String PASSWORD_EMPTY_MESSAGE_EN = "Password is required";
-
+    public static final String USER_NOT_EXIST_MESSAGE_EN = "Username doesn't exist";
     /**
      * ServerMessage Section
      */
