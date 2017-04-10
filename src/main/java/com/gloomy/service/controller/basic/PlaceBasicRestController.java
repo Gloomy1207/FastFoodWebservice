@@ -19,12 +19,12 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping(ApiMappingUrl.API_BASIC_URL + ApiMappingUrl.PLACE_ENDPOINT)
-public class PlaceBasicServiceController {
+public class PlaceBasicRestController {
 
     private final PlaceDAOImpl mPlaceDAOImp;
 
     @Autowired
-    public PlaceBasicServiceController(PlaceDAOImpl mPlaceDAOImp) {
+    public PlaceBasicRestController(PlaceDAOImpl mPlaceDAOImp) {
         this.mPlaceDAOImp = mPlaceDAOImp;
     }
 

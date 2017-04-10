@@ -85,4 +85,12 @@ public class Food {
         }
         return places;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Food) {
+            return foodId == ((Food) obj).getFoodId();
+        }
+        return super.equals(obj);
+    }
 }

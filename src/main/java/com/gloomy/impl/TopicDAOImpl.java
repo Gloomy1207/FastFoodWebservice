@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 /**
  * Copyright © 2017 Gloomy
  * Created by Gloomy on 07/04/2017.
@@ -22,5 +24,9 @@ public class TopicDAOImpl {
 
     public Page<Topic> getAllOrderByLike(Pageable pageable) {
         return mTopicDAO.findAllOrderByLike(pageable);
+    }
+
+    public Set<Topic> searchTopic(String keyword) {
+        return mTopicDAO.search(keyword);
     }
 }

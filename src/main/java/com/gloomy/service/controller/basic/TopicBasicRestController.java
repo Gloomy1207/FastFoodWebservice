@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(ApiMappingUrl.API_BASIC_URL + ApiMappingUrl.TOPIC_ENDPOINT)
-public class TopicBasicServiceController {
+public class TopicBasicRestController {
     private final TopicDAOImpl mTopicDAOImpl;
 
     @Autowired
-    public TopicBasicServiceController(TopicDAOImpl mTopicDAOImpl) {
+    public TopicBasicRestController(TopicDAOImpl mTopicDAOImpl) {
         this.mTopicDAOImpl = mTopicDAOImpl;
     }
 
