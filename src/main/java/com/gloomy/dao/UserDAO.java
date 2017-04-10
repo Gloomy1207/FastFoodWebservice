@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
+import java.util.Set;
 
 /**
  * Copyright © 2017 Gloomy
@@ -20,4 +21,10 @@ public interface UserDAO extends JpaRepository<User, Integer> {
 
     @Query("SELECT u FROM  User u ORDER BY u.point")
     Page<User> findUserOrderByPoint(Pageable pageable);
+
+    @Query("SELECT u FROM User u WHERE (u.email LIKE LOWER(CONCAT('%', ?1, '%') ) ) OR " +
+            "(u.username LIKE LOWER(CONCAT('%', ?1, '%') ) ) OR " +
+            "(u.fullname LIKE LOWER(CONCAT('%', ?1, '%') ) ) OR " +
+            "(u.description LIKE LOWER(CONCAT('%', ?1, '%') ) )")
+    Set<User> search(String keyword);
 }

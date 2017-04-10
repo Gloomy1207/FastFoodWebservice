@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.sql.Time;
 import java.util.Set;
 
 /**
@@ -28,10 +29,10 @@ public class Place {
     private String description;
 
     @Column(name = "open_time")
-    private String openTime;
+    private Time openTime;
 
     @Column(name = "close_time")
-    private String closeTime;
+    private Time closeTime;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id")
@@ -69,4 +70,12 @@ public class Place {
     @JoinColumn(name = "place_id")
     @JsonIgnore
     private Set<PlaceFood> foods;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Place) {
+            return placeId == ((Place) obj).getPlaceId();
+        }
+        return super.equals(obj);
+    }
 }

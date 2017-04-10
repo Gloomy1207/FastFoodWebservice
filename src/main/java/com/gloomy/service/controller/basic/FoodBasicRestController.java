@@ -19,11 +19,11 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping(ApiMappingUrl.API_BASIC_URL + ApiMappingUrl.FOOD_ENDPOINT)
-public class FoodBasicServiceController {
+public class FoodBasicRestController {
     private final FoodDAOImpl mFoodDAOImpl;
 
     @Autowired
-    public FoodBasicServiceController(FoodDAOImpl mFoodDAOImpl) {
+    public FoodBasicRestController(FoodDAOImpl mFoodDAOImpl) {
         this.mFoodDAOImpl = mFoodDAOImpl;
     }
 

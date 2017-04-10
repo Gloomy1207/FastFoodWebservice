@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
+import java.util.Set;
 
 /**
  * Copyright © 2017 Gloomy
@@ -17,4 +18,8 @@ public interface TopicDAO extends JpaRepository<Topic, Integer> {
 
     @Query("SELECT t FROM Topic t ORDER BY t.topicLikes.size")
     Page<Topic> findAllOrderByLike(Pageable pageable);
+
+    @Query("SELECT t FROM Topic t WHERE (t.content LIKE LOWER(CONCAT('%', ?1, '%') ) ) OR " +
+            "(t.title LIKE LOWER(CONCAT('%', ?1, '%') ) )")
+    Set<Topic> search(String keyword);
 }

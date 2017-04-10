@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Copyright © 2017 Gloomy
@@ -44,5 +45,9 @@ public class UserDAOImpl {
 
     public Page<User> findAllPaginateOrderByPoint(Pageable pageable) {
         return mUserDAO.findUserOrderByPoint(pageable);
+    }
+
+    public Set<User> searchUser(String keyword) {
+        return mUserDAO.search(keyword);
     }
 }

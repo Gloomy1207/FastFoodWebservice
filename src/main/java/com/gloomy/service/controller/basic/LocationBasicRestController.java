@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(ApiMappingUrl.API_BASIC_URL + ApiMappingUrl.LOCATION_ENDPOINT)
-public class LocationBasicServiceController {
+public class LocationBasicRestController {
 
     private final CityDAOImpl mCityDAO;
 
     @Autowired
-    public LocationBasicServiceController(CityDAOImpl mCityDAO) {
+    public LocationBasicRestController(CityDAOImpl mCityDAO) {
         this.mCityDAO = mCityDAO;
     }
 

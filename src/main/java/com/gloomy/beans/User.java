@@ -55,6 +55,9 @@ public class User {
     @Column(name = "fullname")
     private String fullname;
 
+    @Column(name = "description")
+    private String description;
+
     @Column(name = "point")
     private int point;
 
@@ -91,4 +94,12 @@ public class User {
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private Set<PlaceReply> placeReplies;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof User) {
+            userId = ((User) obj).getUserId();
+        }
+        return super.equals(obj);
+    }
 }

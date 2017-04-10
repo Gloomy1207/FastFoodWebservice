@@ -4,7 +4,7 @@ package com.gloomy.service.controller.response;
  * Copyright © 2017 Gloomy
  * Created by Gloomy on 18-Mar-17.
  */
-public class ResponseMessageConstant {
+public final class ResponseMessageConstant {
     /**
      * UserMessage Section
      */

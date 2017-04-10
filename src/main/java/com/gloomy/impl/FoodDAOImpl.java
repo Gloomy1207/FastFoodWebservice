@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Copyright © 2017 Gloomy
@@ -55,5 +56,9 @@ public class FoodDAOImpl {
         List<Food> nearFoods = getNearFood(latLng);
         foods = new PageImpl<>(nearFoods, pageable, nearFoods.size());
         return foods;
+    }
+
+    public Set<Food> searchFood(String keyword) {
+        return mFoodDAO.search(keyword);
     }
 }

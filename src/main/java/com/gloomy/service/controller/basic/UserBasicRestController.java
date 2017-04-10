@@ -19,12 +19,12 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping(ApiMappingUrl.API_BASIC_URL + ApiMappingUrl.USER_ENDPOINT)
-public class UserBasicServiceController {
+public class UserBasicRestController {
 
     private final UserDAOImpl mUserDAOImpl;
 
     @Autowired
-    public UserBasicServiceController(UserDAOImpl userDAOImpl) {
+    public UserBasicRestController(UserDAOImpl userDAOImpl) {
         this.mUserDAOImpl = userDAOImpl;
     }
 

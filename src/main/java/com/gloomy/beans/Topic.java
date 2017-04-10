@@ -32,6 +32,9 @@ public class Topic {
     @Column(name = "post_time")
     private Timestamp post_time;
 
+    @Column(name = "title")
+    private String title;
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_id")
     private Set<TopicImage> images;
@@ -44,4 +47,12 @@ public class Topic {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_id")
     private Set<TopicComment> comments;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Topic) {
+            return ((Topic) obj).getPostId() == postId;
+        }
+        return super.equals(obj);
+    }
 }
