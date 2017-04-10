@@ -1,7 +1,7 @@
 package com.gloomy.service.controller.authenticated;
 
 import com.gloomy.beans.User;
-import com.gloomy.dao.UserDAO;
+import com.gloomy.impl.UserDAOImpl;
 import com.gloomy.security.SecurityConstants;
 import com.gloomy.service.ApiMappingUrl;
 import com.gloomy.service.ApiParameter;
@@ -20,12 +20,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(ApiMappingUrl.API_AUTH_URL + ApiMappingUrl.USER_ENDPOINT)
 public class UserAuthenticatedController {
 
-    private final UserDAO mUserDAO;
+    private final UserDAOImpl mUserDAO;
     private final JwtTokenUtil mJwtTokenUtil;
 
     @Autowired
-    public UserAuthenticatedController(UserDAO mUserDAO, JwtTokenUtil mJwtTokenUtil) {
-        this.mUserDAO = mUserDAO;
+    public UserAuthenticatedController(UserDAOImpl userDAO, JwtTokenUtil mJwtTokenUtil) {
+        this.mUserDAO = userDAO;
         this.mJwtTokenUtil = mJwtTokenUtil;
     }
 

@@ -29,12 +29,16 @@ public class ApiMappingUrl {
     public static final String PLACE_ENDPOINT = "/place";
     public static final String LOCATION_ENDPOINT = "/location";
     public static final String USER_ENDPOINT = "/user";
+    public static final String TOPIC_ENDPOINT = "/topic";
 
     /**
      * RestService For App URL
      */
     public static final String HOME = "/home";
     public static final String SEARCH = "/search";
-    public static final String TOPIC_ENDPOINT = "/topic";
     public static final String RATING = "/rating";
+    public static final String HOT = "/hot";
+    public static final String TRENDING = "/trending";
+    public static final String FRESH = "/fresh";
+    public static final String RANDOM = "/random";
 }

@@ -54,4 +54,8 @@ public class UserDAOImpl {
     public Page<User> getRatingUser(Pageable pageable) {
         return mUserDAO.findRatingUser(pageable);
     }
+
+    public User findUserByUsername(String username) {
+        return mUserDAO.findUserByUsername(username);
+    }
 }
