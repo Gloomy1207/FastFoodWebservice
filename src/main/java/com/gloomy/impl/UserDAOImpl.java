@@ -50,4 +50,8 @@ public class UserDAOImpl {
     public Set<User> searchUser(String keyword) {
         return mUserDAO.search(keyword);
     }
+
+    public Page<User> getRatingUser(Pageable pageable) {
+        return mUserDAO.findRatingUser(pageable);
+    }
 }

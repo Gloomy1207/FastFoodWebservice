@@ -39,4 +39,9 @@ public class PlaceBasicRestController {
                                     HttpServletRequest request, Pageable pageable) {
         return mPlaceDAOImp.findNearPlacePageable(lat, lng, request, pageable);
     }
+
+    @GetMapping(value = ApiMappingUrl.RATING)
+    public Page<Place> getPlaceByRating(Pageable pageable) {
+        return mPlaceDAOImp.findPlaceByRatingPageable(pageable);
+    }
 }

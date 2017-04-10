@@ -66,4 +66,8 @@ public class PlaceDAOImpl {
             return mPlaceDAO.searchWithoutTime(keyword);
         }
     }
+
+    public Page<Place> findPlaceByRatingPageable(Pageable pageable) {
+        return mPlaceDAO.findPlaceRating(pageable);
+    }
 }
