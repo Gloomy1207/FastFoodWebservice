@@ -1,7 +1,7 @@
 package com.gloomy.service.controller.basic;
 
 import com.gloomy.beans.User;
-import com.gloomy.dao.UserDAO;
+import com.gloomy.impl.UserDAOImpl;
 import com.gloomy.security.RestUserDetailService;
 import com.gloomy.security.SecurityConstants;
 import com.gloomy.service.ApiMappingUrl;
@@ -32,16 +32,16 @@ public class AuthenticationRestController {
 
     private final RestUserDetailService mRestUserDetailService;
 
-    private final UserDAO mUserDAO;
+    private final UserDAOImpl mUserDAO;
+
+    private BCryptPasswordEncoder mBCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
-    public AuthenticationRestController(JwtTokenUtil mJwtTokenUtil, UserDAO mUserDAO, RestUserDetailService mRestUserDetailService) {
+    public AuthenticationRestController(JwtTokenUtil mJwtTokenUtil, UserDAOImpl mUserDAO, RestUserDetailService mRestUserDetailService) {
         this.mJwtTokenUtil = mJwtTokenUtil;
         this.mUserDAO = mUserDAO;
         this.mRestUserDetailService = mRestUserDetailService;
     }
-
-    private BCryptPasswordEncoder mBCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     /**
      * User login rest api
@@ -55,7 +55,7 @@ public class AuthenticationRestController {
     @ResponseBody
     public ResponseEntity<?> login(@RequestParam(ApiParameter.USERNAME) String username,
                                    @RequestParam(ApiParameter.PASSWORD) String password) throws AuthenticationException {
-        User user = mUserDAO.findUserByUsername(username);
+        User user = mUserDAO.getUserByUsername(username);
         if (user == null || !mBCryptPasswordEncoder.matches(password, user.getPassword())) {
             throw new AuthenticationCredentialsNotFoundException("Not match with our record!");
         }
@@ -68,7 +68,7 @@ public class AuthenticationRestController {
     @ResponseBody
     public ResponseEntity<?> register(@RequestParam(value = ApiParameter.USERNAME) String username,
                                       @RequestParam(value = ApiParameter.PASSWORD) String password) {
-        if (mUserDAO.findUserByUsername(username) != null) {
+        if (mUserDAO.getUserByUsername(username) != null) {
             return ResponseEntity.ok(new RegisterResponse(null, null, ResponseMessageConstant.USER_EXIST_MESSAGE_EN));
         }
         User user = new User();
