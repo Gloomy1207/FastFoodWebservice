@@ -41,13 +41,8 @@ public class FoodDAOImpl {
         return foods;
     }
 
-    public Page<Food> findAll(Pageable pageable) {
-        Page<Food> foods = mFoodDAO.findAll(pageable);
-        for (Food food : foods) {
-            food.setRating(food.getFoodRating());
-            food.setNumberOfRating(food.getFoodRatings().size());
-        }
-        return foods;
+    public Page<Food> findAllPaginate(Pageable pageable) {
+        return mFoodDAO.findAll(pageable);
     }
 
     public Page<Food> findNearFood(Double lat, Double lng, HttpServletRequest request, Pageable pageable) {

@@ -33,6 +33,9 @@ public class Food {
     @Column(name = "recipe")
     private String recipe;
 
+    @Column(name = "main_image")
+    private String mainImage;
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "food_id")
     private Set<FoodImage> foodImages;
@@ -54,19 +57,23 @@ public class Food {
 
     @Transient
     private float rating;
+
     @Transient
     private int numberOfRating;
 
-    @Transient
-    public float getFoodRating() {
-        int total = 0;
+    public float getRating() {
         if (foodRatings.size() > 0) {
+            int total = 0;
             for (FoodRating rating : foodRatings) {
                 total += rating.getStar();
             }
             return total / foodRatings.size();
         }
-        return total;
+        return Float.NaN;
+    }
+
+    public int getNumberOfRating() {
+        return foodRatings.size();
     }
 
     @Transient

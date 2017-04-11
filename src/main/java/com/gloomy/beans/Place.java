@@ -86,10 +86,13 @@ public class Place {
     }
 
     public float getAverageRating() {
-        float point = 0;
-        for (PlaceRating placeRating : placeRatings) {
-            point += placeRating.getStar();
+        if (!placeRatings.isEmpty()) {
+            float point = 0;
+            for (PlaceRating placeRating : placeRatings) {
+                point += placeRating.getStar();
+            }
+            return point / placeRatings.size();
         }
-        return point / placeRatings.size();
+        return Float.NaN;
     }
 }

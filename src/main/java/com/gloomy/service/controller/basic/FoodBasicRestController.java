@@ -29,7 +29,7 @@ public class FoodBasicRestController {
 
     @GetMapping(value = ApiMappingUrl.HOME)
     public Page<Food> getDataForHome(Pageable pageable) {
-        return mFoodDAOImpl.findAll(pageable);
+        return mFoodDAOImpl.findAllPaginate(pageable);
     }
 
     @GetMapping(value = ApiMappingUrl.SEARCH)
