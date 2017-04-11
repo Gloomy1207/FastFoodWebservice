@@ -30,7 +30,7 @@ public class PlaceBasicRestController {
 
     @GetMapping(value = ApiMappingUrl.HOME)
     public Page<Place> getDataForHome(Pageable pageable) {
-        return mPlaceDAOImp.findAll(pageable);
+        return mPlaceDAOImp.findAllPageable(pageable);
     }
 
     @GetMapping(value = ApiMappingUrl.SEARCH)

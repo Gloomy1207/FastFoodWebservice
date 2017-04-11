@@ -34,6 +34,5 @@ public class PlaceType {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "place_rating_type", joinColumns = {@JoinColumn(name = "place_type_id")},
             inverseJoinColumns = {@JoinColumn(name = "rating_type_id")})
-    @JsonIgnore
     private Set<RatingType> ratingTypes;
 }

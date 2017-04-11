@@ -8,7 +8,7 @@ public class ApiMappingUrl {
     /**
      * Base URL
      */
-    public static final String API_BASE_URL = "/v1/{locale}/api";
+    public static final String API_BASE_URL = "/v1/api";
     public static final String API_BASIC_URL = API_BASE_URL + "/basic";
     public static final String API_AUTH_URL = API_BASE_URL + "/auth";
 

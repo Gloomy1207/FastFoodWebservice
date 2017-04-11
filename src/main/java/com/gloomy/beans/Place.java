@@ -34,6 +34,9 @@ public class Place {
     @Column(name = "close_time")
     private Time closeTime;
 
+    @Column(name = "main_image")
+    private String mainImage;
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id")
     private Set<PlaceImage> placeImages;
@@ -71,11 +74,22 @@ public class Place {
     @JsonIgnore
     private Set<PlaceFood> foods;
 
+    @Transient
+    private float averageRating;
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Place) {
             return placeId == ((Place) obj).getPlaceId();
         }
         return super.equals(obj);
+    }
+
+    public float getAverageRating() {
+        float point = 0;
+        for (PlaceRating placeRating : placeRatings) {
+            point += placeRating.getStar();
+        }
+        return point / placeRatings.size();
     }
 }

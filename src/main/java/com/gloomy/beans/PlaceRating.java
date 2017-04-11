@@ -35,6 +35,4 @@ public class PlaceRating {
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
-
-
 }

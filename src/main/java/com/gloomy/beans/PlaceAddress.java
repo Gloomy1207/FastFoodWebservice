@@ -29,7 +29,7 @@ public class PlaceAddress {
     private double lng;
 
     @Column(name = "address_name")
-    String addressName;
+    private String addressName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "province_id")

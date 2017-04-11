@@ -30,7 +30,7 @@ public class PlaceDAOImpl {
         this.mPlaceDAO = mPlaceDAO;
     }
 
-    public Page<Place> findAll(Pageable pageable) {
+    public Page<Place> findAllPageable(Pageable pageable) {
         return mPlaceDAO.findAll(pageable);
     }
 
