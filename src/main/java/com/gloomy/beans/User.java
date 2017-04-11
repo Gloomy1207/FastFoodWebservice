@@ -97,6 +97,11 @@ public class User {
     @JsonIgnore
     private Set<PlaceReply> placeReplies;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private Set<Topic> topics;
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof User) {

@@ -1,16 +1,20 @@
 package com.gloomy.service.controller.authenticated;
 
+import com.gloomy.beans.Topic;
 import com.gloomy.beans.User;
 import com.gloomy.impl.UserDAOImpl;
 import com.gloomy.security.SecurityConstants;
 import com.gloomy.service.ApiMappingUrl;
 import com.gloomy.service.ApiParameter;
+import com.gloomy.service.controller.response.ResponseMessageConstant;
 import com.gloomy.service.controller.response.UserProfileResponse;
 import com.gloomy.utils.JwtTokenUtil;
 import com.gloomy.utils.TextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Set;
 
 /**
  * Copyright © 2017 Gloomy
@@ -35,14 +39,25 @@ public class UserAuthenticatedController {
                                         @RequestHeader(value = SecurityConstants.TOKEN_HEADER_NAME, required = false) String token) {
         User user;
         if (!TextUtils.isEmpty(username)) {
-            user = mUserDAO.findUserByUsername(username);
+            user = mUserDAO.getUserByUsername(username);
         } else {
-            user = mUserDAO.findUserByUsername(mJwtTokenUtil.getUsernameFromToken(token));
+            user = mUserDAO.getUserByUsername(mJwtTokenUtil.getUsernameFromToken(token));
         }
         if (user == null) {
-            return ResponseEntity.ok(new UserProfileResponse(false, null, "User doesn't exist!"));
+            return ResponseEntity.ok(UserProfileResponse.builder()
+                    .message(ResponseMessageConstant.USER_NOT_EXIST_MESSAGE_EN)
+                    .status(false)
+                    .build());
         } else {
-            return ResponseEntity.ok(new UserProfileResponse(true, user, null));
+            Set<Topic> topics = user.getTopics();
+            for (Topic topic : topics) {
+                topic.setUser(null);
+            }
+            return ResponseEntity.ok(UserProfileResponse.builder()
+                    .status(true)
+                    .user(user)
+                    .topics(topics)
+                    .build());
         }
     }
 }

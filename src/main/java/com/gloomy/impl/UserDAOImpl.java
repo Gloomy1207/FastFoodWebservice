@@ -55,7 +55,11 @@ public class UserDAOImpl {
         return mUserDAO.findRatingUser(pageable);
     }
 
-    public User findUserByUsername(String username) {
+    public User getUserByUsername(String username) {
         return mUserDAO.findUserByUsername(username);
+    }
+
+    public User save(User user) {
+        return mUserDAO.save(user);
     }
 }
