@@ -27,6 +27,6 @@ public class LocationBasicRestController {
 
     @GetMapping(value = ApiMappingUrl.HOME)
     public Page<City> getDataForHome(Pageable pageable) {
-        return mCityDAO.findAll(pageable);
+        return mCityDAO.findAllForHome(pageable);
     }
 }

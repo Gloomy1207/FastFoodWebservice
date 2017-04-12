@@ -1,6 +1,8 @@
 package com.gloomy.beans;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,9 +36,11 @@ public class City {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
+    @JsonIgnore
     private Set<Province> provinces;
 
     @Transient
+    @JsonProperty("first_five_provinces")
     public Set<Province> getFirstFiveProvince() {
         int i = 0;
         Set<Province> result = new HashSet<>();

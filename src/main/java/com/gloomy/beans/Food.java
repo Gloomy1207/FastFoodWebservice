@@ -1,6 +1,7 @@
 package com.gloomy.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gloomy.utils.LocationUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,7 @@ public class Food {
     private int foodId;
 
     @Column(name = "food_name")
+    @JsonProperty("food_name")
     private String foodName;
 
     @Column(name = "description")
@@ -34,6 +36,7 @@ public class Food {
     private String recipe;
 
     @Column(name = "main_image")
+    @JsonProperty("main_image")
     private String mainImage;
 
     @OneToMany(fetch = FetchType.LAZY)
@@ -55,12 +58,6 @@ public class Food {
     @JsonIgnore
     private Set<PlaceFood> placeFoods;
 
-    @Transient
-    private float rating;
-
-    @Transient
-    private int numberOfRating;
-
     public float getRating() {
         if (foodRatings.size() > 0) {
             int total = 0;
@@ -69,11 +66,20 @@ public class Food {
             }
             return total / foodRatings.size();
         }
-        return Float.NaN;
+        return 5;
     }
 
     public int getNumberOfRating() {
         return foodRatings.size();
+    }
+
+    @JsonProperty("number_of_rating_text")
+    public String getNumberOfRatingText() {
+        StringBuilder builder = new StringBuilder(String.valueOf(foodRatings.size())).append(" reviewer");
+        if (foodRatings.size() > 1) {
+            builder.append("s");
+        }
+        return builder.toString();
     }
 
     @Transient

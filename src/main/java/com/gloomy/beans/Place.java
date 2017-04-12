@@ -1,6 +1,7 @@
 package com.gloomy.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,34 +24,42 @@ public class Place {
     private int placeId;
 
     @Column(name = "place_name")
+    @JsonProperty("place_name")
     private String placeName;
 
     @Column(name = "description")
     private String description;
 
     @Column(name = "open_time")
+    @JsonProperty("open_time")
     private Time openTime;
 
     @Column(name = "close_time")
+    @JsonProperty("close_time")
     private Time closeTime;
 
     @Column(name = "main_image")
+    @JsonProperty("main_image")
     private String mainImage;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id")
+    @JsonProperty("place_images")
     private Set<PlaceImage> placeImages;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id")
+    @JsonProperty("place_ratings")
     private Set<PlaceRating> placeRatings;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_type_id")
+    @JsonProperty("place_type")
     private PlaceType placeType;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "place_id")
+    @JsonProperty("place_address")
     private PlaceAddress placeAddress;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -74,9 +83,6 @@ public class Place {
     @JsonIgnore
     private Set<PlaceFood> foods;
 
-    @Transient
-    private float averageRating;
-
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Place) {
@@ -85,6 +91,7 @@ public class Place {
         return super.equals(obj);
     }
 
+    @JsonProperty("average_rating")
     public float getAverageRating() {
         if (!placeRatings.isEmpty()) {
             float point = 0;
@@ -93,6 +100,15 @@ public class Place {
             }
             return point / placeRatings.size();
         }
-        return Float.NaN;
+        return 5;
+    }
+
+    @JsonProperty("number_rating")
+    public String getNumberRating() {
+        StringBuilder builder = new StringBuilder(String.valueOf(placeRatings.size())).append(" reviewer");
+        if (placeRatings.size() > 1) {
+            builder.append("s");
+        }
+        return builder.toString();
     }
 }

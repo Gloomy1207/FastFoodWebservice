@@ -20,11 +20,7 @@ public class CityDAOImpl {
         this.mCityDAO = mCityDAO;
     }
 
-    public Page<City> findAll(Pageable pageable) {
-        Page<City> cities = mCityDAO.findAll(pageable);
-        for (City city : cities) {
-            city.setProvinces(city.getFirstFiveProvince());
-        }
-        return cities;
+    public Page<City> findAllForHome(Pageable pageable) {
+        return mCityDAO.findAll(pageable);
     }
 }

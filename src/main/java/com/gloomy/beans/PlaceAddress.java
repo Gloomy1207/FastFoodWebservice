@@ -2,6 +2,7 @@ package com.gloomy.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +21,7 @@ public class PlaceAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "place_id")
+    @JsonProperty("place_id")
     private int placeId;
 
     @Column(name = "lat")
@@ -29,6 +31,7 @@ public class PlaceAddress {
     private double lng;
 
     @Column(name = "address_name")
+    @JsonProperty("address_name")
     private String addressName;
 
     @ManyToOne(fetch = FetchType.LAZY)

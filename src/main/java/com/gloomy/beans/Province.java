@@ -2,6 +2,7 @@ package com.gloomy.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,9 +22,11 @@ public class Province {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "province_id")
+    @JsonProperty("province_id")
     private int provinceId;
 
     @Column(name = "province_name")
+    @JsonProperty("province_name")
     private String provinceName;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -35,4 +38,13 @@ public class Province {
     @JoinColumn(name = "province_id")
     @JsonIgnore
     private Set<PlaceAddress> placeAddresses;
+
+    @JsonProperty("number_place_text")
+    public String getNumberPlaceText() {
+        StringBuilder builder = new StringBuilder(String.valueOf(placeAddresses.size())).append(" address");
+        if (placeAddresses.size() > 1) {
+            builder.append("es");
+        }
+        return builder.toString();
+    }
 }
