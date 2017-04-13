@@ -26,6 +26,7 @@ public class City {
     private int cityId;
 
     @Column(name = "city_name")
+    @JsonProperty("city_name")
     private String cityName;
 
     @Column(name = "lat")
