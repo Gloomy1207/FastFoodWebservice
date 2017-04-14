@@ -1,6 +1,7 @@
 package com.gloomy.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +21,7 @@ public class TopicComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "topic_comment_id")
+    @JsonProperty("comment_id")
     private int commentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,6 +38,10 @@ public class TopicComment {
 
     @Column(name = "post_time")
     private Timestamp postTime;
+
+    @Column(name = "main_image")
+    @JsonProperty("main_image")
+    private String mainImage;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_comment_id")

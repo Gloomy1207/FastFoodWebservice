@@ -34,8 +34,8 @@ public class UserBasicRestController {
     }
 
     @GetMapping(value = ApiMappingUrl.SEARCH)
-    public Page<User> getSearchUser(Pageable pageable) {
-        return mUserDAOImpl.findAllPaginateOrderByPoint(pageable);
+    public Page<User> getSearchUser(HttpServletRequest request, Pageable pageable) {
+        return mUserDAOImpl.findAllPaginateOrderByPoint(request, pageable);
     }
 
     @GetMapping(value = ApiMappingUrl.RATING)

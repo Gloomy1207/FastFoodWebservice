@@ -5,6 +5,8 @@ import com.gloomy.beans.User;
 import com.gloomy.dao.UserDAO;
 import com.gloomy.security.SecurityConstants;
 import com.gloomy.utils.JwtTokenUtil;
+import com.gloomy.utils.ServerInformationUtil;
+import com.gloomy.utils.TextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +25,10 @@ import java.util.Set;
  */
 @Service
 public class UserDAOImpl {
+    private static final String AVATAR_UPLOAD_DIRECTORY = "avatar";
+    private static final String STATIC_IMAGES_RESOURCE_PATH = "images";
+    private static final String EMPTY_AVATAR_NAME = "face_sample.png";
+
     private UserDAO mUserDAO;
     private JwtTokenUtil mTokenUtil;
 
@@ -43,8 +50,20 @@ public class UserDAOImpl {
         return new PageImpl<>(places, pageable, places.size());
     }
 
-    public Page<User> findAllPaginateOrderByPoint(Pageable pageable) {
-        return mUserDAO.findUserOrderByPoint(pageable);
+    public Page<User> findAllPaginateOrderByPoint(HttpServletRequest request, Pageable pageable) {
+        Page<User> users = mUserDAO.findUserOrderByPoint(pageable);
+        String avatarPath = String.format("%s%s%s", ServerInformationUtil.getURLWithContextPath(request), File.separator, AVATAR_UPLOAD_DIRECTORY);
+        for (User user : users) {
+            if (TextUtils.isEmpty(user.getAvatar())) {
+                user.setAvatar(String.format("%s%s%s%s%s", ServerInformationUtil.getURLWithContextPath(request), File.separator, STATIC_IMAGES_RESOURCE_PATH, File.separator, EMPTY_AVATAR_NAME));
+            } else {
+                if (user.getAvatar().contains("http://") || user.getAvatar().contains("https://")) {
+                    continue;
+                }
+                user.setAvatar(String.format("%s%s%s", avatarPath, File.separator, user.getAvatar()));
+            }
+        }
+        return users;
     }
 
     public Set<User> searchUser(String keyword) {

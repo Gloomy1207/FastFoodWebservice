@@ -62,6 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(ApiMappingUrl.API_BASIC_URL + "/**").permitAll()
                 .antMatchers(ApiMappingUrl.OAUTH_API_URL + "/**").permitAll()
+                .antMatchers("/images/**").permitAll()
                 .anyRequest().authenticated();
         httpSecurity.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
         httpSecurity.headers().defaultsDisabled().cacheControl();
