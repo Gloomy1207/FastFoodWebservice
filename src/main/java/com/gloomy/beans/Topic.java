@@ -42,6 +42,10 @@ public class Topic {
     @Column(name = "title")
     private String title;
 
+    @Column(name = "main_image")
+    @JsonProperty("main_image")
+    private String mainImage;
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_id")
     private Set<TopicImage> images;
@@ -56,14 +60,6 @@ public class Topic {
     @JsonIgnore
     private Set<TopicComment> comments;
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof Topic) {
-            return ((Topic) obj).getTopicId() == topicId;
-        }
-        return super.equals(obj);
-    }
-
     @JsonProperty("count_topic_likes")
     public int getTopicLikesNumber() {
         return topicLikes.size();
@@ -74,6 +70,10 @@ public class Topic {
         return comments.size();
     }
 
+    @Transient
+    @JsonProperty("is_like")
+    public boolean isLike;
+
     @JsonProperty("latest_comment")
     public TopicComment getLatestComment() {
         List<TopicComment> topicComments = new ArrayList<>(comments);
@@ -82,5 +82,13 @@ public class Topic {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Topic) {
+            return ((Topic) obj).getTopicId() == topicId;
+        }
+        return super.equals(obj);
     }
 }

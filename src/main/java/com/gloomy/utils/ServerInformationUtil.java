@@ -1,6 +1,8 @@
 package com.gloomy.utils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Copyright © 2017 Gloomy
@@ -11,6 +13,14 @@ public final class ServerInformationUtil {
     }
 
     public static String getURLWithContextPath(HttpServletRequest request) {
-        return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+        String serverName = request.getServerName();
+        if (serverName.contains("localhost")) {
+            try {
+                serverName = InetAddress.getLocalHost().getHostAddress();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+        }
+        return request.getScheme() + "://" + serverName + ":" + request.getServerPort() + request.getContextPath();
     }
 }

@@ -7,6 +7,7 @@ import com.gloomy.security.SecurityConstants;
 import com.gloomy.utils.JwtTokenUtil;
 import com.gloomy.utils.ServerInformationUtil;
 import com.gloomy.utils.TextUtils;
+import com.gloomy.utils.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -25,10 +26,6 @@ import java.util.Set;
  */
 @Service
 public class UserDAOImpl {
-    private static final String AVATAR_UPLOAD_DIRECTORY = "avatar";
-    private static final String STATIC_IMAGES_RESOURCE_PATH = "images";
-    private static final String EMPTY_AVATAR_NAME = "face_sample.png";
-
     private UserDAO mUserDAO;
     private JwtTokenUtil mTokenUtil;
 
@@ -52,16 +49,8 @@ public class UserDAOImpl {
 
     public Page<User> findAllPaginateOrderByPoint(HttpServletRequest request, Pageable pageable) {
         Page<User> users = mUserDAO.findUserOrderByPoint(pageable);
-        String avatarPath = String.format("%s%s%s", ServerInformationUtil.getURLWithContextPath(request), File.separator, AVATAR_UPLOAD_DIRECTORY);
         for (User user : users) {
-            if (TextUtils.isEmpty(user.getAvatar())) {
-                user.setAvatar(String.format("%s%s%s%s%s", ServerInformationUtil.getURLWithContextPath(request), File.separator, STATIC_IMAGES_RESOURCE_PATH, File.separator, EMPTY_AVATAR_NAME));
-            } else {
-                if (user.getAvatar().contains("http://") || user.getAvatar().contains("https://")) {
-                    continue;
-                }
-                user.setAvatar(String.format("%s%s%s", avatarPath, File.separator, user.getAvatar()));
-            }
+            user.setAvatar(UserUtil.getUserAvatarPath(user, request));
         }
         return users;
     }

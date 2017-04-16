@@ -37,11 +37,8 @@ public class TopicComment {
     private String content;
 
     @Column(name = "post_time")
+    @JsonProperty("post_time")
     private Timestamp postTime;
-
-    @Column(name = "main_image")
-    @JsonProperty("main_image")
-    private String mainImage;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_comment_id")

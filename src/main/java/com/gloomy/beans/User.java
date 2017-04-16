@@ -61,6 +61,7 @@ public class User {
     private String description;
 
     @Column(name = "point")
+    @NotNull
     private int point;
 
     @Column(name = "avatar")
