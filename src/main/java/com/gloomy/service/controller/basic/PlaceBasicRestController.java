@@ -2,6 +2,7 @@ package com.gloomy.service.controller.basic;
 
 import com.gloomy.beans.Place;
 import com.gloomy.impl.PlaceDAOImpl;
+import com.gloomy.impl.PlaceRatingDAOImpl;
 import com.gloomy.service.ApiMappingUrl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,10 +23,12 @@ import javax.servlet.http.HttpServletRequest;
 public class PlaceBasicRestController {
 
     private final PlaceDAOImpl mPlaceDAOImp;
+    private final PlaceRatingDAOImpl mPlaceRatingDAO;
 
     @Autowired
-    public PlaceBasicRestController(PlaceDAOImpl mPlaceDAOImp) {
+    public PlaceBasicRestController(PlaceDAOImpl mPlaceDAOImp, PlaceRatingDAOImpl mPlaceRatingDAO) {
         this.mPlaceDAOImp = mPlaceDAOImp;
+        this.mPlaceRatingDAO = mPlaceRatingDAO;
     }
 
     @GetMapping(value = ApiMappingUrl.HOME)
@@ -42,6 +45,6 @@ public class PlaceBasicRestController {
 
     @GetMapping(value = ApiMappingUrl.RATING)
     public Page<Place> getPlaceByRating(Pageable pageable) {
-        return mPlaceDAOImp.findPlaceByRatingPageable(pageable);
+        return mPlaceRatingDAO.getPlaceOrderByPlaceRating(pageable);
     }
 }

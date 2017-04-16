@@ -1,6 +1,7 @@
 package com.gloomy.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +18,7 @@ import java.util.Set;
 @Table(name = "place")
 @Setter
 @Getter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Place {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,7 +51,7 @@ public class Place {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id")
-    @JsonProperty("place_ratings")
+    @JsonIgnore
     private Set<PlaceRating> placeRatings;
 
     @ManyToOne(fetch = FetchType.LAZY)

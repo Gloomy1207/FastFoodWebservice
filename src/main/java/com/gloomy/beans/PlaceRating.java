@@ -1,6 +1,7 @@
 package com.gloomy.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,7 @@ import javax.persistence.*;
 @Table(name = "place_rating")
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class PlaceRating {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
