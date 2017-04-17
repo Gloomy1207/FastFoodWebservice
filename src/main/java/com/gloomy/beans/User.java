@@ -2,7 +2,6 @@ package com.gloomy.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -70,7 +69,7 @@ public class User {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_favorite", joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "place_id")})
-    @JsonProperty("user_favorite_places")
+    @JsonIgnore
     private Set<Place> userFavoritePlaces;
 
     @OneToMany(fetch = FetchType.LAZY)

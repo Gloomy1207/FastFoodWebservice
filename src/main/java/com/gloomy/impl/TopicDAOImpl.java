@@ -51,11 +51,19 @@ public class TopicDAOImpl {
         return mTopicDAO.search(keyword);
     }
 
-    public Page<Topic> getTopicByThreshold(Pageable pageable, int threshold) {
-        return mTopicDAO.findTopic(threshold, pageable);
+    public Page<Topic> getTopicByThreshold(Pageable pageable, int threshold, HttpServletRequest request) {
+        Page<Topic> topics = mTopicDAO.findTopic(threshold, pageable);
+        for (Topic topic : topics) {
+            topic.getUser().setAvatar(UserUtil.getUserAvatarPath(topic.getUser(), request));
+        }
+        return topics;
     }
 
-    public Page<Topic> getTopicByRandom(Pageable pageable) {
-        return mTopicDAO.findTopicOrderRandom(pageable);
+    public Page<Topic> getTopicByRandom(Pageable pageable, HttpServletRequest request) {
+        Page<Topic> topics = mTopicDAO.findTopicOrderRandom(pageable);
+        for (Topic topic : topics) {
+            topic.getUser().setAvatar(UserUtil.getUserAvatarPath(topic.getUser(), request));
+        }
+        return topics;
     }
 }

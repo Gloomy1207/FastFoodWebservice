@@ -41,4 +41,6 @@ public class ApiMappingUrl {
     public static final String TRENDING = "/trending";
     public static final String FRESH = "/fresh";
     public static final String RANDOM = "/random";
+    public static final String USER_FAVORITE = "/favorite";
+    public static final String USER_FEEDS = "/feeds";
 }

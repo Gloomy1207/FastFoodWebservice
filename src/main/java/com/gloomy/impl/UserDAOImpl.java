@@ -1,10 +1,14 @@
 package com.gloomy.impl;
 
 import com.gloomy.beans.Place;
+import com.gloomy.beans.Topic;
 import com.gloomy.beans.User;
 import com.gloomy.dao.UserDAO;
 import com.gloomy.security.SecurityConstants;
+import com.gloomy.service.controller.response.ResponseMessageConstant;
+import com.gloomy.service.controller.response.UserProfileResponse;
 import com.gloomy.utils.JwtTokenUtil;
+import com.gloomy.utils.TextUtils;
 import com.gloomy.utils.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -70,5 +74,43 @@ public class UserDAOImpl {
 
     public User save(User user) {
         return mUserDAO.save(user);
+    }
+
+    public UserProfileResponse getUserProfile(String username, HttpServletRequest request) {
+        User user;
+        if (!TextUtils.isEmpty(username)) {
+            user = getUserByUsername(username);
+        } else {
+            String token = request.getHeader(SecurityConstants.TOKEN_HEADER_NAME);
+            user = getUserByUsername(mTokenUtil.getUsernameFromToken(token));
+        }
+        if (user == null) {
+            return UserProfileResponse.builder()
+                    .message(ResponseMessageConstant.USER_NOT_EXIST_MESSAGE_EN)
+                    .status(false)
+                    .build();
+        } else {
+            user.setAvatar(UserUtil.getUserAvatarPath(user, request));
+            List<Topic> topics = new ArrayList<>(user.getTopics());
+            for (Topic topic : topics) {
+                topic.setUser(null);
+            }
+            Page<Topic> topicPage = new PageImpl<>(topics);
+            List<Place> places = new ArrayList<>(user.getUserFavoritePlaces());
+            Page<Place> placePage = new PageImpl<>(places);
+            return UserProfileResponse.builder()
+                    .status(true)
+                    .user(user)
+                    .topics(topicPage)
+                    .favoritePlaces(placePage)
+                    .build();
+        }
+    }
+
+    public Page<Topic> getUserFeeds(HttpServletRequest request, Pageable pageable) {
+        String token = request.getHeader(SecurityConstants.TOKEN_HEADER_NAME);
+        User user = mUserDAO.findUserByUsername(mTokenUtil.getUsernameFromToken(token));
+        List<Topic> topics = new ArrayList<>(user.getTopics());
+        return new PageImpl<>(topics, pageable, topics.size());
     }
 }

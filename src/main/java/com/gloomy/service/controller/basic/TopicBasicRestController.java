@@ -49,22 +49,22 @@ public class TopicBasicRestController {
     }
 
     @GetMapping(ApiMappingUrl.HOT)
-    public Page<Topic> getHotTopic(Pageable pageable) {
-        return mTopicDAOImpl.getTopicByThreshold(pageable, mTopicThresholdDAO.getThreshold(TopicThresholdDAOImpl.TopicTypeName.HOT));
+    public Page<Topic> getHotTopic(Pageable pageable, HttpServletRequest request) {
+        return mTopicDAOImpl.getTopicByThreshold(pageable, mTopicThresholdDAO.getThreshold(TopicThresholdDAOImpl.TopicTypeName.HOT), request);
     }
 
     @GetMapping(ApiMappingUrl.TRENDING)
-    public Page<Topic> getTrendingTopic(Pageable pageable) {
-        return mTopicDAOImpl.getTopicByThreshold(pageable, mTopicThresholdDAO.getThreshold(TopicThresholdDAOImpl.TopicTypeName.TRENDING));
+    public Page<Topic> getTrendingTopic(Pageable pageable, HttpServletRequest request) {
+        return mTopicDAOImpl.getTopicByThreshold(pageable, mTopicThresholdDAO.getThreshold(TopicThresholdDAOImpl.TopicTypeName.TRENDING), request);
     }
 
     @GetMapping(ApiMappingUrl.FRESH)
-    public Page<Topic> getFreshTopic(Pageable pageable) {
-        return mTopicDAOImpl.getTopicByThreshold(pageable, mTopicThresholdDAO.getThreshold(TopicThresholdDAOImpl.TopicTypeName.FRESH));
+    public Page<Topic> getFreshTopic(Pageable pageable, HttpServletRequest request) {
+        return mTopicDAOImpl.getTopicByThreshold(pageable, mTopicThresholdDAO.getThreshold(TopicThresholdDAOImpl.TopicTypeName.FRESH), request);
     }
 
     @GetMapping(ApiMappingUrl.RANDOM)
-    public Page<Topic> getRandomTopic(Pageable pageable) {
-        return mTopicDAOImpl.getTopicByRandom(pageable);
+    public Page<Topic> getRandomTopic(Pageable pageable, HttpServletRequest request) {
+        return mTopicDAOImpl.getTopicByRandom(pageable, request);
     }
 }
