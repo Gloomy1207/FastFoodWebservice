@@ -5,8 +5,6 @@ import com.gloomy.beans.User;
 import com.gloomy.dao.UserDAO;
 import com.gloomy.security.SecurityConstants;
 import com.gloomy.utils.JwtTokenUtil;
-import com.gloomy.utils.ServerInformationUtil;
-import com.gloomy.utils.TextUtils;
 import com.gloomy.utils.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -59,8 +56,12 @@ public class UserDAOImpl {
         return mUserDAO.search(keyword);
     }
 
-    public Page<User> getRatingUser(Pageable pageable) {
-        return mUserDAO.findRatingUser(pageable);
+    public Page<User> getRatingUser(Pageable pageable, HttpServletRequest request) {
+        Page<User> users = mUserDAO.findRatingUser(pageable);
+        for (User user : users) {
+            user.setAvatar(UserUtil.getUserAvatarPath(user, request));
+        }
+        return users;
     }
 
     public User getUserByUsername(String username) {

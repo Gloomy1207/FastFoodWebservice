@@ -39,7 +39,7 @@ public class UserBasicRestController {
     }
 
     @GetMapping(value = ApiMappingUrl.RATING)
-    public Page<User> getRatingUser(Pageable pageable) {
-        return mUserDAOImpl.getRatingUser(pageable);
+    public Page<User> getRatingUser(Pageable pageable, HttpServletRequest request) {
+        return mUserDAOImpl.getRatingUser(pageable, request);
     }
 }
