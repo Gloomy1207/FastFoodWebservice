@@ -12,7 +12,6 @@ import com.gloomy.service.controller.response.basic.RegisterResponse;
 import com.gloomy.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -57,11 +56,17 @@ public class AuthenticationRestController {
                                    @RequestParam(ApiParameter.PASSWORD) String password) throws AuthenticationException {
         User user = mUserDAO.getUserByUsername(username);
         if (user == null || !mBCryptPasswordEncoder.matches(password, user.getPassword())) {
-            throw new AuthenticationCredentialsNotFoundException("Not match with our record!");
+            return ResponseEntity.ok(JwtAuthenticationResponse.builder()
+                    .message("Username or password is incorrect")
+                    .status(false)
+                    .build());
         }
         UserDetails userDetails = mRestUserDetailService.loadUserByUsername(user.getUsername());
         String token = mJwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtAuthenticationResponse(token));
+        return ResponseEntity.ok(JwtAuthenticationResponse.builder()
+                .accessToken(token)
+                .status(true)
+                .build());
     }
 
     @RequestMapping(value = ApiMappingUrl.REGISTER_USER_API_URL, method = RequestMethod.POST)
@@ -94,7 +99,10 @@ public class AuthenticationRestController {
         String token = request.getHeader(SecurityConstants.TOKEN_HEADER_NAME);
         if (mJwtTokenUtil.canTokenBeRefreshed(token)) {
             String refreshToken = mJwtTokenUtil.refreshToken(token);
-            return ResponseEntity.ok(new JwtAuthenticationResponse(refreshToken));
+            return ResponseEntity.ok(JwtAuthenticationResponse.builder()
+                    .status(false)
+                    .accessToken(refreshToken)
+                    .build());
         } else {
             return ResponseEntity.badRequest().body(null);
         }
