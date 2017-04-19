@@ -52,6 +52,7 @@ public class User {
 
     @Column(name = "email")
     @Email
+    @NotNull
     private String email;
 
     @Column(name = "fullname")
@@ -67,7 +68,7 @@ public class User {
     @Column(name = "avatar")
     private String avatar;
 
-    @Column(name = "enabled")
+    @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
     @Column(name = "facebook_access_token")

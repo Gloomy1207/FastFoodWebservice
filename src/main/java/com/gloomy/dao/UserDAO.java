@@ -34,4 +34,6 @@ public interface UserDAO extends JpaRepository<User, Integer> {
 
     @Query("SELECT u FROM User u WHERE (u.email = ?1 AND u.facebookId = ?2)")
     User findUserByFacebookIdAndAndEmail(String email, String facebookId);
+
+    User findUserByEmail(String email);
 }

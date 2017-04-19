@@ -15,4 +15,5 @@ public class ApiParameter {
     public static final String EMAIL = "email";
     public static final String AVATAR = "avatar";
     public static final String FACEBOOK_ID = "facebook_id";
+    public static final String CONFIRM_TOKEN = "confirm_token";
 }

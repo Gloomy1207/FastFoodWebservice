@@ -1,16 +1,22 @@
 package com.gloomy.service.controller.basic;
 
 import com.gloomy.beans.User;
+import com.gloomy.beans.VerificationToken;
+import com.gloomy.events.OnRegistrationCompleteEvent;
 import com.gloomy.impl.UserDAOImpl;
+import com.gloomy.impl.VerificationDAOImpl;
 import com.gloomy.security.RestUserDetailService;
 import com.gloomy.security.SecurityConstants;
 import com.gloomy.service.ApiMappingUrl;
 import com.gloomy.service.ApiParameter;
-import com.gloomy.service.controller.response.ResponseMessageConstant;
 import com.gloomy.service.controller.response.basic.JwtAuthenticationResponse;
 import com.gloomy.service.controller.response.basic.RegisterResponse;
+import com.gloomy.service.controller.response.basic.RegistrationConfirmResponse;
 import com.gloomy.utils.JwtTokenUtil;
+import com.gloomy.utils.ServerInformationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -33,13 +39,22 @@ public class AuthenticationRestController {
 
     private final UserDAOImpl mUserDAO;
 
+    private final ApplicationEventPublisher mApplicationEventPublisher;
+
+    private final VerificationDAOImpl mVerificationDAO;
+
+    private final MessageSource mMessageSource;
+
     private BCryptPasswordEncoder mBCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
-    public AuthenticationRestController(JwtTokenUtil mJwtTokenUtil, UserDAOImpl mUserDAO, RestUserDetailService mRestUserDetailService) {
+    public AuthenticationRestController(JwtTokenUtil mJwtTokenUtil, UserDAOImpl mUserDAO, RestUserDetailService mRestUserDetailService, ApplicationEventPublisher mApplicationEventPublisher, VerificationDAOImpl mVerificationDAO, MessageSource mMessageSource) {
         this.mJwtTokenUtil = mJwtTokenUtil;
         this.mUserDAO = mUserDAO;
         this.mRestUserDetailService = mRestUserDetailService;
+        this.mApplicationEventPublisher = mApplicationEventPublisher;
+        this.mVerificationDAO = mVerificationDAO;
+        this.mMessageSource = mMessageSource;
     }
 
     /**
@@ -69,23 +84,33 @@ public class AuthenticationRestController {
                 .build());
     }
 
-    @RequestMapping(value = ApiMappingUrl.REGISTER_USER_API_URL, method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping(value = ApiMappingUrl.REGISTER_USER_API_URL)
     public ResponseEntity<?> register(@RequestParam(value = ApiParameter.USERNAME) String username,
-                                      @RequestParam(value = ApiParameter.PASSWORD) String password) {
+                                      @RequestParam(value = ApiParameter.PASSWORD) String password,
+                                      @RequestParam(value = ApiParameter.EMAIL) String email,
+                                      HttpServletRequest request) {
+        String userExist = mMessageSource.getMessage("message.userExist", null, request.getLocale());
+        String emailExist = mMessageSource.getMessage("message.userExist", null, request.getLocale());
+        String serverError = mMessageSource.getMessage("message.internalError", null, request.getLocale());
         if (mUserDAO.getUserByUsername(username) != null) {
-            return ResponseEntity.ok(new RegisterResponse(null, null, ResponseMessageConstant.USER_EXIST_MESSAGE_EN));
+            return ResponseEntity.ok(new RegisterResponse(null, null, userExist));
+        }
+        if (mUserDAO.getUserByEmail(email) != null) {
+            return ResponseEntity.ok(new RegisterResponse(null, null, emailExist));
         }
         User user = User.builder()
                 .username(username)
                 .password(mBCryptPasswordEncoder.encode(password))
+                .email(email)
                 .build();
         if (mUserDAO.save(user) != null) {
+            String success = mMessageSource.getMessage("message.addSuccess", null, request.getLocale());
             UserDetails userDetails = mRestUserDetailService.loadUserByUsername(username);
             String token = mJwtTokenUtil.generateToken(userDetails);
-            return ResponseEntity.ok(new RegisterResponse(user, token, ResponseMessageConstant.ADD_USER_SUCCESSFUL));
+            mApplicationEventPublisher.publishEvent(new OnRegistrationCompleteEvent(request.getContextPath(), request.getLocale(), user, ServerInformationUtil.getURLWithContextPath(request)));
+            return ResponseEntity.ok(new RegisterResponse(user, token, success));
         } else {
-            return ResponseEntity.ok(new RegisterResponse(null, null, ResponseMessageConstant.SERVER_ERROR_MESSAGE_EN));
+            return ResponseEntity.ok(new RegisterResponse(null, null, serverError));
         }
     }
 
@@ -137,5 +162,47 @@ public class AuthenticationRestController {
                 .accessToken(token)
                 .status(true)
                 .build());
+    }
+
+    /**
+     * @param confirmToken @String
+     * @return confirmation status
+     */
+
+    @GetMapping(value = ApiMappingUrl.REGISTRATION_CONFIRM)
+    public ResponseEntity<?> registrationConfirm(@RequestParam(ApiParameter.CONFIRM_TOKEN) String confirmToken,
+                                                 HttpServletRequest request) {
+        VerificationToken verificationToken = mVerificationDAO.getVerificationToken(confirmToken);
+        if (verificationToken == null) {
+            String tokenInvalid = mMessageSource.getMessage("message.confirmationTokenInvalid", null, request.getLocale());
+            return ResponseEntity.ok(RegistrationConfirmResponse.builder().message(tokenInvalid).status(false).build());
+        }
+        if (mVerificationDAO.isTokenExpired(verificationToken)) {
+            String tokenExpired = mMessageSource.getMessage("message.confirmationTokenExpired", null, request.getLocale());
+            return ResponseEntity.ok(RegistrationConfirmResponse.builder().message(tokenExpired).status(false).build());
+        }
+        User user = verificationToken.getUser();
+        user.setEnabled(true);
+        mUserDAO.save(user);
+        mVerificationDAO.deleteItem(verificationToken);
+        String success = mMessageSource.getMessage("message.confirmationSuccess", null, request.getLocale());
+        return ResponseEntity.ok(RegistrationConfirmResponse.builder().message(success).status(true).build());
+    }
+
+    /**
+     * @param request @HttpServletRequest
+     * @return Send Confirmation Message
+     */
+    @GetMapping(value = ApiMappingUrl.RESEND_CONFIRMATION)
+    public ResponseEntity<?> resendConfirmation(HttpServletRequest request) {
+        String token = request.getHeader(SecurityConstants.TOKEN_HEADER_NAME);
+        User user = mUserDAO.getUserByUsername(mJwtTokenUtil.getUsernameFromToken(token));
+        VerificationToken verificationToken = mVerificationDAO.getVerificationTokenByUser(user);
+        verificationToken.setExpiryDate(mVerificationDAO.calculateExpiryDate(VerificationDAOImpl.EXPIRATION));
+        verificationToken.setToken(mVerificationDAO.recreateVerificationToken());
+        mVerificationDAO.updateValue(verificationToken);
+        mApplicationEventPublisher.publishEvent(new OnRegistrationCompleteEvent(request.getContextPath(), request.getLocale(), user, ServerInformationUtil.getURLWithContextPath(request)));
+        String resendMessage = mMessageSource.getMessage("message.resendConfirmationSuccess", null, request.getLocale());
+        return ResponseEntity.ok(RegistrationConfirmResponse.builder().message(resendMessage).status(true).build());
     }
 }

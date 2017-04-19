@@ -6,12 +6,12 @@ import com.gloomy.beans.Topic;
 import com.gloomy.beans.User;
 import com.gloomy.dao.UserDAO;
 import com.gloomy.security.SecurityConstants;
-import com.gloomy.service.controller.response.ResponseMessageConstant;
 import com.gloomy.service.controller.response.UserProfileResponse;
 import com.gloomy.utils.JwtTokenUtil;
 import com.gloomy.utils.TextUtils;
 import com.gloomy.utils.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +31,7 @@ public class UserDAOImpl {
     private UserDAO mUserDAO;
     private JwtTokenUtil mTokenUtil;
     private RoleDAOImpl mRoleDAO;
+    private MessageSource mMessageSource;
 
     @Autowired
     public void setUserDAO(UserDAO mUserDAO) {
@@ -45,6 +46,11 @@ public class UserDAOImpl {
     @Autowired
     public void setRoleDAO(RoleDAOImpl roleDAO) {
         this.mRoleDAO = roleDAO;
+    }
+
+    @Autowired
+    public void setMessageSource(MessageSource mMessageSource) {
+        this.mMessageSource = mMessageSource;
     }
 
     public Page<Place> getUserFavoritePlace(HttpServletRequest request, Pageable pageable) {
@@ -79,6 +85,10 @@ public class UserDAOImpl {
         return mUserDAO.findUserByUsername(username);
     }
 
+    public User getUserByEmail(String email) {
+        return mUserDAO.findUserByEmail(email);
+    }
+
     public User save(User user) {
         return mUserDAO.save(user);
     }
@@ -92,8 +102,9 @@ public class UserDAOImpl {
             user = getUserByUsername(mTokenUtil.getUsernameFromToken(token));
         }
         if (user == null) {
+            String userNotExist = mMessageSource.getMessage("message.usernameNotExist", null, request.getLocale());
             return UserProfileResponse.builder()
-                    .message(ResponseMessageConstant.USER_NOT_EXIST_MESSAGE_EN)
+                    .message(userNotExist)
                     .status(false)
                     .build();
         } else {

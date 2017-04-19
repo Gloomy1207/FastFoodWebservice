@@ -21,6 +21,8 @@ public class ApiMappingUrl {
     public static final String REFRESH_TOKEN_URL = "/refresh";
     public static final String LOGOUT_USER_API_URL = "/logout";
     public static final String REGISTER_USER_API_URL = "/register";
+    public static final String REGISTRATION_CONFIRM = "/registrationConfirm";
+    public static final String RESEND_CONFIRMATION = "/resendConfirmation";
 
     /**
      * Endpoint URL
