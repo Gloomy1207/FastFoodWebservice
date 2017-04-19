@@ -76,9 +76,10 @@ public class AuthenticationRestController {
         if (mUserDAO.getUserByUsername(username) != null) {
             return ResponseEntity.ok(new RegisterResponse(null, null, ResponseMessageConstant.USER_EXIST_MESSAGE_EN));
         }
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(mBCryptPasswordEncoder.encode(password));
+        User user = User.builder()
+                .username(username)
+                .password(mBCryptPasswordEncoder.encode(password))
+                .build();
         if (mUserDAO.save(user) != null) {
             UserDetails userDetails = mRestUserDetailService.loadUserByUsername(username);
             String token = mJwtTokenUtil.generateToken(userDetails);
@@ -106,5 +107,35 @@ public class AuthenticationRestController {
         } else {
             return ResponseEntity.badRequest().body(null);
         }
+    }
+
+    /**
+     * User login rest api
+     *
+     * @param facebookId    @RequestParam
+     * @param facebookToken @RequestParam
+     * @param name          @RequestParam
+     * @param email         @RequestParam
+     * @param avatar        @RequestParam
+     * @return access_token
+     * @throws AuthenticationException Error when not match
+     */
+    @PostMapping(value = ApiMappingUrl.LOGIN_USER_FACEBOOK_API_URL)
+    @ResponseBody
+    public ResponseEntity<?> loginFacebook(@RequestParam(ApiParameter.FACEBOOK_TOKEN) String facebookToken,
+                                           @RequestParam(ApiParameter.FACEBOOK_ID) String facebookId,
+                                           @RequestParam(ApiParameter.FULL_NAME) String name,
+                                           @RequestParam(ApiParameter.EMAIL) String email,
+                                           @RequestParam(ApiParameter.AVATAR) String avatar) throws AuthenticationException {
+        User user = mUserDAO.getUserByFacebook(email, facebookId);
+        if (user == null) {
+            user = mUserDAO.registerUserByFacebook(facebookToken, facebookId, name, email, avatar);
+        }
+        UserDetails userDetails = mRestUserDetailService.loadUserByUsername(user.getUsername());
+        String token = mJwtTokenUtil.generateToken(userDetails);
+        return ResponseEntity.ok(JwtAuthenticationResponse.builder()
+                .accessToken(token)
+                .status(true)
+                .build());
     }
 }

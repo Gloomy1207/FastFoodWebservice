@@ -2,8 +2,7 @@ package com.gloomy.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -18,7 +17,10 @@ import java.util.Set;
 @Table(name = "user")
 @Getter
 @Setter
+@Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class User {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
@@ -40,16 +42,13 @@ public class User {
     @Column(name = "user_id")
     private Long userId;
 
-    @NotNull
     @Column(name = "username")
     private String username;
 
-    @NotNull
     @Column(name = "password")
     @JsonIgnore
     private String password;
 
-    @NotNull
     @Column(name = "email")
     private String email;
 
@@ -65,6 +64,14 @@ public class User {
 
     @Column(name = "avatar")
     private String avatar;
+
+    @Column(name = "facebook_access_token")
+    @JsonIgnore
+    private String facebookAccessToken;
+
+    @Column(name = "facebook_id")
+    @JsonIgnore
+    private String facebookId;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_favorite", joinColumns = {@JoinColumn(name = "user_id")},

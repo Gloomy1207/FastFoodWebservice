@@ -1,6 +1,7 @@
 package com.gloomy.impl;
 
 import com.gloomy.beans.Place;
+import com.gloomy.beans.Role;
 import com.gloomy.beans.Topic;
 import com.gloomy.beans.User;
 import com.gloomy.dao.UserDAO;
@@ -29,6 +30,7 @@ import java.util.Set;
 public class UserDAOImpl {
     private UserDAO mUserDAO;
     private JwtTokenUtil mTokenUtil;
+    private RoleDAOImpl mRoleDAO;
 
     @Autowired
     public void setUserDAO(UserDAO mUserDAO) {
@@ -38,6 +40,11 @@ public class UserDAOImpl {
     @Autowired
     public void setTokenUtil(JwtTokenUtil tokenUtil) {
         mTokenUtil = tokenUtil;
+    }
+
+    @Autowired
+    public void setRoleDAO(RoleDAOImpl roleDAO) {
+        this.mRoleDAO = roleDAO;
     }
 
     public Page<Place> getUserFavoritePlace(HttpServletRequest request, Pageable pageable) {
@@ -112,5 +119,23 @@ public class UserDAOImpl {
         User user = mUserDAO.findUserByUsername(mTokenUtil.getUsernameFromToken(token));
         List<Topic> topics = new ArrayList<>(user.getTopics());
         return new PageImpl<>(topics, pageable, topics.size());
+    }
+
+    public User getUserByFacebook(String email, String facebookId) {
+        return mUserDAO.findUserByFacebookIdAndAndEmail(email, facebookId);
+    }
+
+    public User registerUserByFacebook(String facebookToken, String facebookId, String name, String email, String avatar) {
+        Role role = mRoleDAO.getRoleByRoleName(RoleDAOImpl.RoleName.USER);
+        User user = User.builder()
+                .facebookAccessToken(facebookToken)
+                .facebookId(facebookId)
+                .fullname(name)
+                .email(email)
+                .username(email)
+                .role(role)
+                .avatar(avatar)
+                .build();
+        return mUserDAO.save(user);
     }
 }

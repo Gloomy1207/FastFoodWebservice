@@ -30,4 +30,8 @@ public interface UserDAO extends JpaRepository<User, Integer> {
 
     @Query("SELECT u FROM User u ORDER BY u.point")
     Page<User> findRatingUser(Pageable pageable);
+
+
+    @Query("SELECT u FROM User u WHERE (u.email = ?1 AND u.facebookId = ?2)")
+    User findUserByFacebookIdAndAndEmail(String email, String facebookId);
 }

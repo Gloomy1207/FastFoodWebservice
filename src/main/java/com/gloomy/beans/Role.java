@@ -1,8 +1,7 @@
 package com.gloomy.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -15,6 +14,9 @@ import java.util.List;
 @Table(name = "role")
 @Setter
 @Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

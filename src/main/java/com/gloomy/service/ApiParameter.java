@@ -10,4 +10,9 @@ public class ApiParameter {
     public static final String LOCALE = "locale";
     public static final String ACCESS_TOKEN = "access_token";
     public static final String KEYWORD = "keyword";
+    public static final String FACEBOOK_TOKEN = "facebook_token";
+    public static final String FULL_NAME = "full_name";
+    public static final String EMAIL = "email";
+    public static final String AVATAR = "avatar";
+    public static final String FACEBOOK_ID = "facebook_id";
 }

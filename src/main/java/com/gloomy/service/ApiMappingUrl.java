@@ -17,6 +17,7 @@ public class ApiMappingUrl {
      */
     public static final String OAUTH_API_URL = "/v1/api/oauth";
     public static final String LOGIN_USER_API_URL = "/login";
+    public static final String LOGIN_USER_FACEBOOK_API_URL = "/facebook";
     public static final String REFRESH_TOKEN_URL = "/refresh";
     public static final String LOGOUT_USER_API_URL = "/logout";
     public static final String REGISTER_USER_API_URL = "/register";
