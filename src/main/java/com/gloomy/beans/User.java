@@ -3,6 +3,7 @@ package com.gloomy.beans;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -50,6 +51,7 @@ public class User {
     private String password;
 
     @Column(name = "email")
+    @Email
     private String email;
 
     @Column(name = "fullname")
@@ -64,6 +66,9 @@ public class User {
 
     @Column(name = "avatar")
     private String avatar;
+
+    @Column(name = "enabled")
+    private boolean enabled;
 
     @Column(name = "facebook_access_token")
     @JsonIgnore
