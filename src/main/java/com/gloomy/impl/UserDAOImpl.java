@@ -15,6 +15,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +33,7 @@ public class UserDAOImpl {
     private JwtTokenUtil mTokenUtil;
     private RoleDAOImpl mRoleDAO;
     private MessageSource mMessageSource;
+    private BCryptPasswordEncoder mBCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
     public void setUserDAO(UserDAO mUserDAO) {
@@ -89,8 +91,8 @@ public class UserDAOImpl {
         return mUserDAO.findUserByEmail(email);
     }
 
-    public User save(User user) {
-        return mUserDAO.save(user);
+    public void save(User user) {
+        mUserDAO.save(user);
     }
 
     public UserProfileResponse getUserProfile(String username, HttpServletRequest request) {
@@ -146,6 +148,17 @@ public class UserDAOImpl {
                 .username(email)
                 .role(role)
                 .avatar(avatar)
+                .build();
+        return mUserDAO.save(user);
+    }
+
+    public User registerUser(String username, String password, String email) {
+        Role role = mRoleDAO.getRoleByRoleName(RoleDAOImpl.RoleName.USER);
+        User user = User.builder()
+                .username(username)
+                .password(mBCryptPasswordEncoder.encode(password))
+                .email(email)
+                .role(role)
                 .build();
         return mUserDAO.save(user);
     }

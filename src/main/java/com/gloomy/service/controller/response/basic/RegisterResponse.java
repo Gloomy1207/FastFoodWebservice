@@ -1,7 +1,6 @@
 package com.gloomy.service.controller.response.basic;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.gloomy.beans.User;
 import com.gloomy.service.ApiParameter;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -19,7 +18,7 @@ public class RegisterResponse implements Serializable {
 
     private static final long serialVersionUID = 2557261084599213418L;
 
-    private User user;
+    private boolean status;
     @JsonProperty(ApiParameter.ACCESS_TOKEN)
     private String accessToken;
     private String message;

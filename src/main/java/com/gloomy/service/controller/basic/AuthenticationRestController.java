@@ -93,24 +93,20 @@ public class AuthenticationRestController {
         String emailExist = mMessageSource.getMessage("message.userExist", null, request.getLocale());
         String serverError = mMessageSource.getMessage("message.internalError", null, request.getLocale());
         if (mUserDAO.getUserByUsername(username) != null) {
-            return ResponseEntity.ok(new RegisterResponse(null, null, userExist));
+            return ResponseEntity.ok(new RegisterResponse(false, null, userExist));
         }
         if (mUserDAO.getUserByEmail(email) != null) {
-            return ResponseEntity.ok(new RegisterResponse(null, null, emailExist));
+            return ResponseEntity.ok(new RegisterResponse(false, null, emailExist));
         }
-        User user = User.builder()
-                .username(username)
-                .password(mBCryptPasswordEncoder.encode(password))
-                .email(email)
-                .build();
-        if (mUserDAO.save(user) != null) {
-            String success = mMessageSource.getMessage("message.addSuccess", null, request.getLocale());
+        User user = mUserDAO.registerUser(username, password, email);
+        if (user != null) {
+            String success = mMessageSource.getMessage("message.sendConfirmationSuccess", null, request.getLocale());
             UserDetails userDetails = mRestUserDetailService.loadUserByUsername(username);
             String token = mJwtTokenUtil.generateToken(userDetails);
-            mApplicationEventPublisher.publishEvent(new OnRegistrationCompleteEvent(request.getContextPath(), request.getLocale(), user, ServerInformationUtil.getURLWithContextPath(request)));
-            return ResponseEntity.ok(new RegisterResponse(user, token, success));
+            new Thread(() -> mApplicationEventPublisher.publishEvent(new OnRegistrationCompleteEvent(request.getContextPath(), request.getLocale(), user, ServerInformationUtil.getURLWithContextPath(request)))).start();
+            return ResponseEntity.ok(new RegisterResponse(true, token, success));
         } else {
-            return ResponseEntity.ok(new RegisterResponse(null, null, serverError));
+            return ResponseEntity.ok(new RegisterResponse(false, null, serverError));
         }
     }
 
