@@ -23,6 +23,7 @@ public class Food {
     @Id
     @Column(name = "food_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("food_id")
     private int foodId;
 
     @Column(name = "food_name")
@@ -41,6 +42,7 @@ public class Food {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "food_id")
+    @JsonIgnore
     private Set<FoodImage> foodImages;
 
     @OneToMany(fetch = FetchType.LAZY)

@@ -1,6 +1,7 @@
 package com.gloomy.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +21,7 @@ public class FoodImage {
     private int id;
 
     @Column(name = "image_path")
+    @JsonProperty("image_path")
     private String imagePath;
 
     @ManyToOne(fetch = FetchType.LAZY)
