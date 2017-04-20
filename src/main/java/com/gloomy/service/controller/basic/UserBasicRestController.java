@@ -1,6 +1,5 @@
 package com.gloomy.service.controller.basic;
 
-import com.gloomy.beans.Place;
 import com.gloomy.beans.User;
 import com.gloomy.impl.UserDAOImpl;
 import com.gloomy.service.ApiMappingUrl;
@@ -26,11 +25,6 @@ public class UserBasicRestController {
     @Autowired
     public UserBasicRestController(UserDAOImpl userDAOImpl) {
         this.mUserDAOImpl = userDAOImpl;
-    }
-
-    @GetMapping(value = ApiMappingUrl.HOME)
-    public Page<Place> getUserFavoritePlace(HttpServletRequest request, Pageable pageable) {
-        return mUserDAOImpl.getUserFavoritePlace(request, pageable);
     }
 
     @GetMapping(value = ApiMappingUrl.SEARCH)

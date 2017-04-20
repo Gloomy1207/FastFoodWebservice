@@ -1,6 +1,5 @@
 package com.gloomy.service.controller.authenticated;
 
-import com.gloomy.beans.Place;
 import com.gloomy.beans.Topic;
 import com.gloomy.impl.UserDAOImpl;
 import com.gloomy.service.ApiMappingUrl;
@@ -36,8 +35,8 @@ public class UserAuthenticatedController {
     }
 
     @GetMapping(value = ApiMappingUrl.USER_FAVORITE)
-    public Page<Place> getUserFavorite(HttpServletRequest request, Pageable pageable) {
-        return mUserDAO.getUserFavoritePlace(request, pageable);
+    public ResponseEntity<?> getUserFavorite(HttpServletRequest request, Pageable pageable) {
+        return ResponseEntity.ok(mUserDAO.getUserFavoritePlace(request, pageable));
     }
 
     @GetMapping(value = ApiMappingUrl.USER_FEEDS)

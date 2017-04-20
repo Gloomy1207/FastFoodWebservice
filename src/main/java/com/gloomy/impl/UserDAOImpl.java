@@ -7,6 +7,7 @@ import com.gloomy.beans.User;
 import com.gloomy.dao.UserDAO;
 import com.gloomy.security.SecurityConstants;
 import com.gloomy.service.controller.response.UserProfileResponse;
+import com.gloomy.service.controller.response.authenticated.UserFavoriteResponse;
 import com.gloomy.utils.JwtTokenUtil;
 import com.gloomy.utils.TextUtils;
 import com.gloomy.utils.UserUtil;
@@ -55,12 +56,33 @@ public class UserDAOImpl {
         this.mMessageSource = mMessageSource;
     }
 
-    public Page<Place> getUserFavoritePlace(HttpServletRequest request, Pageable pageable) {
+    public UserFavoriteResponse getUserFavoritePlace(HttpServletRequest request, Pageable pageable) {
+        UserFavoriteResponse response;
         String token = request.getHeader(SecurityConstants.TOKEN_HEADER_NAME);
         User user = mUserDAO.findUserByUsername(mTokenUtil.getUsernameFromToken(token));
-        List<Place> places = new ArrayList<>();
-        places.addAll(user.getUserFavoritePlaces());
-        return new PageImpl<>(places, pageable, places.size());
+        if (user.isEnabled()) {
+            List<Place> places = new ArrayList<>();
+            places.addAll(user.getUserFavoritePlaces());
+            if (!places.isEmpty()) {
+                response = UserFavoriteResponse.builder()
+                        .status(true)
+                        .places(new PageImpl<>(places, pageable, places.size()))
+                        .build();
+            } else {
+                String emptyFavorite = mMessageSource.getMessage("message.favoriteEmpty", null, request.getLocale());
+                response = UserFavoriteResponse.builder()
+                        .status(true)
+                        .message(emptyFavorite)
+                        .build();
+            }
+        } else {
+            String requestActiveMessage = mMessageSource.getMessage("message.requestActive", null, request.getLocale());
+            response = UserFavoriteResponse.builder()
+                    .status(false)
+                    .message(requestActiveMessage)
+                    .build();
+        }
+        return response;
     }
 
     public Page<User> findAllPaginateOrderByPoint(HttpServletRequest request, Pageable pageable) {
