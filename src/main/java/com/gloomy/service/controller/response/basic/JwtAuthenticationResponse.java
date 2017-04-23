@@ -2,6 +2,7 @@ package com.gloomy.service.controller.response.basic;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.gloomy.beans.User;
 import com.gloomy.service.ApiParameter;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,4 +23,5 @@ public class JwtAuthenticationResponse implements Serializable {
     private String accessToken;
     private boolean status;
     private String message;
+    private User user;
 }

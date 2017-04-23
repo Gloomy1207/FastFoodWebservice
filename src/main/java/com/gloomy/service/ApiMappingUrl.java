@@ -47,4 +47,7 @@ public class ApiMappingUrl {
     public static final String RANDOM = "/random";
     public static final String USER_FAVORITE = "/favorite";
     public static final String USER_FEEDS = "/feeds";
+    public static final String COMMENT = "/comment";
+    public static final String LIKE = "/like";
+    public static final String DELETE_COMMENT = "delete-comment";
 }

@@ -80,6 +80,7 @@ public class AuthenticationRestController {
         String token = mJwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(JwtAuthenticationResponse.builder()
                 .accessToken(token)
+                .user(user)
                 .status(true)
                 .build());
     }
@@ -93,10 +94,18 @@ public class AuthenticationRestController {
         String emailExist = mMessageSource.getMessage("message.userExist", null, request.getLocale());
         String serverError = mMessageSource.getMessage("message.internalError", null, request.getLocale());
         if (mUserDAO.getUserByUsername(username) != null) {
-            return ResponseEntity.ok(new RegisterResponse(false, null, userExist));
+            return ResponseEntity.ok(RegisterResponse.builder()
+                    .status(false)
+                    .accessToken(null)
+                    .user(null)
+                    .message(userExist).build());
         }
         if (mUserDAO.getUserByEmail(email) != null) {
-            return ResponseEntity.ok(new RegisterResponse(false, null, emailExist));
+            return ResponseEntity.ok(RegisterResponse.builder()
+                    .status(false)
+                    .accessToken(null)
+                    .user(null)
+                    .message(emailExist).build());
         }
         User user = mUserDAO.registerUser(username, password, email);
         if (user != null) {
@@ -104,9 +113,17 @@ public class AuthenticationRestController {
             UserDetails userDetails = mRestUserDetailService.loadUserByUsername(username);
             String token = mJwtTokenUtil.generateToken(userDetails);
             new Thread(() -> mApplicationEventPublisher.publishEvent(new OnRegistrationCompleteEvent(request.getContextPath(), request.getLocale(), user, ServerInformationUtil.getURLWithContextPath(request)))).start();
-            return ResponseEntity.ok(new RegisterResponse(true, token, success));
+            return ResponseEntity.ok(RegisterResponse.builder()
+                    .accessToken(token)
+                    .status(true)
+                    .message(success)
+                    .build());
         } else {
-            return ResponseEntity.ok(new RegisterResponse(false, null, serverError));
+            return ResponseEntity.ok(RegisterResponse.builder()
+                    .status(false)
+                    .accessToken(null)
+                    .user(null)
+                    .message(serverError).build());
         }
     }
 
@@ -157,6 +174,7 @@ public class AuthenticationRestController {
         return ResponseEntity.ok(JwtAuthenticationResponse.builder()
                 .accessToken(token)
                 .status(true)
+                .user(user)
                 .build());
     }
 

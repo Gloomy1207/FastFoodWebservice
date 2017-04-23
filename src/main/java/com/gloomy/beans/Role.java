@@ -29,4 +29,15 @@ public class Role {
     @JoinTable(name = "role_authority", joinColumns = {@JoinColumn(name = "role_id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_id")})
     private List<Authority> authorities;
+
+    @Transient
+    @JsonIgnore
+    public boolean containAuthority(String userAuthority) {
+        for (Authority authority : authorities) {
+            if (authority.getAuthorityValue().equals(userAuthority)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

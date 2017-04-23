@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -103,11 +104,6 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonIgnore
-    private Set<TopicReply> postReplies;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    @JsonIgnore
     private Set<PlaceReply> placeReplies;
 
     @OneToMany(fetch = FetchType.LAZY)
@@ -118,7 +114,7 @@ public class User {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof User) {
-            userId = ((User) obj).getUserId();
+            return Objects.equals(userId, ((User) obj).getUserId());
         }
         return super.equals(obj);
     }
