@@ -15,4 +15,6 @@ public interface TopicLikeDAO extends JpaRepository<TopicLike, Integer> {
 
     @Query("SELECT t FROM TopicLike t WHERE t.topic.topicId = ?1 AND t.user.userId = ?2")
     TopicLike getTopicLikeByTopicAndUser(int topicId, Long userId);
+
+    TopicLike findTopicLikeByUserUserIdAndTopicTopicId(Long userId, int topicId);
 }

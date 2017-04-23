@@ -28,4 +28,6 @@ public interface TopicDAO extends JpaRepository<Topic, Integer> {
 
     @Query("SELECT t FROM Topic t ORDER BY RAND()")
     Page<Topic> findTopicOrderRandom(Pageable pageable);
+
+    Topic findByTopicId(int topicId);
 }

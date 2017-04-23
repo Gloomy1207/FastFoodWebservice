@@ -1,8 +1,8 @@
 package com.gloomy.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -15,6 +15,10 @@ import java.sql.Timestamp;
 @Table(name = "topic_like")
 @Getter
 @Setter
+@Builder
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class TopicLike {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

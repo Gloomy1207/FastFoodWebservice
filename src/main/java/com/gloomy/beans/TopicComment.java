@@ -1,13 +1,12 @@
 package com.gloomy.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Set;
 
 /**
  * Copyright © 2017 Gloomy
@@ -17,6 +16,10 @@ import java.util.Set;
 @Table(name = "topic_comment")
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Builder
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class TopicComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,7 +43,7 @@ public class TopicComment {
     @JsonProperty("post_time")
     private Timestamp postTime;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "topic_comment_id")
-    private Set<TopicReply> postReplies;
+    @Transient
+    @JsonProperty("is_allow_delete")
+    private boolean isAllowDelete;
 }
