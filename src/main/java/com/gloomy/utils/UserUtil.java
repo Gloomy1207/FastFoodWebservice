@@ -1,9 +1,10 @@
 package com.gloomy.utils;
 
 import com.gloomy.beans.User;
+import com.gloomy.impl.UserDAOImpl;
+import com.gloomy.security.SecurityConstants;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 
 /**
  * Copyright © 2017 Gloomy
@@ -26,5 +27,13 @@ public final class UserUtil {
             return user.getAvatar();
         }
         return String.format("%s%s%s", avatarPath, "/", user.getAvatar());
+    }
+
+    public static User getUserFromRequest(HttpServletRequest request, UserDAOImpl userDAO, JwtTokenUtil tokenUtil) {
+        String token = request.getHeader(SecurityConstants.TOKEN_HEADER_NAME);
+        if (!TextUtils.isEmpty(token)) {
+            return userDAO.getUserByUsername(tokenUtil.getUsernameFromToken(token));
+        }
+        return null;
     }
 }

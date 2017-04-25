@@ -117,6 +117,7 @@ public class AuthenticationRestController {
                     .accessToken(token)
                     .status(true)
                     .message(success)
+                    .user(user)
                     .build());
         } else {
             return ResponseEntity.ok(RegisterResponse.builder()

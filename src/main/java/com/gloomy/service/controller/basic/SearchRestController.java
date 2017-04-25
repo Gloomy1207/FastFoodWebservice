@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 
 /**
@@ -48,11 +49,12 @@ public class SearchRestController {
     }
 
     @GetMapping(value = ApiMappingUrl.SEARCH)
-    public ResponseEntity<?> searchKeyword(@RequestParam(name = ApiParameter.KEYWORD) String keyword) {
+    public ResponseEntity<?> searchKeyword(@RequestParam(name = ApiParameter.KEYWORD) String keyword,
+                                           HttpServletRequest request) {
         Set<Food> foods = mFoodDAO.searchFood(keyword);
         foods.addAll(mFoodPriceDAO.searchFood(keyword));
         Set<User> peoples = mUserDAO.searchUser(keyword);
-        Set<Place> stores = mPlaceDAO.searchPlace(keyword);
+        Set<Place> stores = mPlaceDAO.searchPlace(keyword, request);
         stores.addAll(mPlaceTypeDAO.searchPlace(keyword));
         Set<Topic> topics = mTopicDAO.searchTopic(keyword);
         return ResponseEntity.ok(SearchResultResponse.builder()

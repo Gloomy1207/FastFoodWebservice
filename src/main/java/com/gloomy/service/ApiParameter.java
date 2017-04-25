@@ -21,4 +21,5 @@ public class ApiParameter {
     public static final String COMMENT = "comment";
     public static final String CONTENT = "content";
     public static final String COMMENT_ID = "comment_id";
+    public static final String PLACE_ID = "place_id";
 }

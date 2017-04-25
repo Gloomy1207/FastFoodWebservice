@@ -11,7 +11,7 @@ import lombok.Getter;
 @Builder
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DeleteTopicResponse {
+public class DeletePlaceCommentResponse {
     private boolean status;
     private String message;
 }

@@ -1,9 +1,12 @@
 package com.gloomy.service.controller.basic;
 
 import com.gloomy.beans.Place;
+import com.gloomy.beans.PlaceComment;
+import com.gloomy.impl.PlaceCommentDAOImpl;
 import com.gloomy.impl.PlaceDAOImpl;
 import com.gloomy.impl.PlaceRatingDAOImpl;
 import com.gloomy.service.ApiMappingUrl;
+import com.gloomy.service.ApiParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,16 +27,18 @@ public class PlaceBasicRestController {
 
     private final PlaceDAOImpl mPlaceDAOImp;
     private final PlaceRatingDAOImpl mPlaceRatingDAO;
+    private final PlaceCommentDAOImpl mPlaceCommentDAO;
 
     @Autowired
-    public PlaceBasicRestController(PlaceDAOImpl mPlaceDAOImp, PlaceRatingDAOImpl mPlaceRatingDAO) {
+    public PlaceBasicRestController(PlaceDAOImpl mPlaceDAOImp, PlaceRatingDAOImpl mPlaceRatingDAO, PlaceCommentDAOImpl mPlaceCommentDAO) {
         this.mPlaceDAOImp = mPlaceDAOImp;
         this.mPlaceRatingDAO = mPlaceRatingDAO;
+        this.mPlaceCommentDAO = mPlaceCommentDAO;
     }
 
     @GetMapping(value = ApiMappingUrl.HOME)
-    public Page<Place> getDataForHome(Pageable pageable) {
-        return mPlaceDAOImp.findAllPageable(pageable);
+    public Page<Place> getDataForHome(Pageable pageable, HttpServletRequest request) {
+        return mPlaceDAOImp.findAllPageable(pageable, request);
     }
 
     @GetMapping(value = ApiMappingUrl.SEARCH)
@@ -46,5 +51,12 @@ public class PlaceBasicRestController {
     @GetMapping(value = ApiMappingUrl.RATING)
     public Page<Place> getPlaceByRating(Pageable pageable) {
         return mPlaceRatingDAO.getPlaceOrderByPlaceRating(pageable);
+    }
+
+    @GetMapping(value = ApiMappingUrl.COMMENT)
+    public Page<PlaceComment> getPlaceComment(@RequestParam(name = ApiParameter.PLACE_ID) int placeId,
+                                              Pageable pageable,
+                                              HttpServletRequest request) {
+        return mPlaceCommentDAO.getCommentByPlaceId(placeId, pageable, request);
     }
 }

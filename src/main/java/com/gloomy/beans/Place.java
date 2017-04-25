@@ -23,6 +23,7 @@ public class Place {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "place_id")
+    @JsonProperty("place_id")
     private int placeId;
 
     @Column(name = "place_name")
@@ -84,6 +85,10 @@ public class Place {
     @JoinColumn(name = "place_id")
     @JsonIgnore
     private Set<PlaceFood> foods;
+
+    @Transient
+    @JsonProperty("is_favorite")
+    private boolean isFavorite;
 
     @Override
     public boolean equals(Object obj) {

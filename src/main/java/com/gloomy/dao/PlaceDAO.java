@@ -23,4 +23,6 @@ public interface PlaceDAO extends JpaRepository<Place, Integer> {
     @Query("SELECT p FROM Place p WHERE (p.description LIKE LOWER(CONCAT('%', ?1, '%') ) ) OR " +
             "(p.placeName LIKE LOWER(CONCAT('%', ?1, '%') ) )")
     Set<Place> searchWithoutTime(String keyword);
+
+    Place findByPlaceId(int placeId);
 }

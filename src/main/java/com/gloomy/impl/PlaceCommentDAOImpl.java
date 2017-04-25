@@ -1,13 +1,12 @@
 package com.gloomy.impl;
 
-import com.gloomy.beans.Topic;
-import com.gloomy.beans.TopicComment;
+import com.gloomy.beans.Place;
+import com.gloomy.beans.PlaceComment;
 import com.gloomy.beans.User;
-import com.gloomy.dao.TopicCommentDAO;
+import com.gloomy.dao.PlaceCommentDAO;
 import com.gloomy.security.SecurityConstants;
 import com.gloomy.security.UserAuthority;
-import com.gloomy.security.UserRole;
-import com.gloomy.service.controller.response.authenticated.DeleteTopicCommentResponse;
+import com.gloomy.service.controller.response.authenticated.DeletePlaceCommentResponse;
 import com.gloomy.service.controller.response.authenticated.TopicCommentResponse;
 import com.gloomy.utils.JwtTokenUtil;
 import com.gloomy.utils.TextUtils;
@@ -23,20 +22,20 @@ import java.sql.Timestamp;
 
 /**
  * Copyright © 2017 Gloomy
- * Created by Gloomy on 23-Apr-17.
+ * Created by Gloomy on 25/04/2017.
  */
 @Service
-public class TopicCommentDAOImpl {
+public class PlaceCommentDAOImpl {
 
-    private TopicCommentDAO mTopicCommentDAO;
+    private PlaceCommentDAO mPlaceCommentDAO;
+    private PlaceDAOImpl mPlaceDAO;
     private UserDAOImpl mUserDAO;
     private JwtTokenUtil mTokenUtil;
-    private TopicDAOImpl mTopicDAO;
     private MessageSource mMessageSource;
 
     @Autowired
-    public void setTopicCommentDAO(TopicCommentDAO topicCommentDAO) {
-        this.mTopicCommentDAO = topicCommentDAO;
+    public void setPlaceCommentDAO(PlaceCommentDAO mPlaceCommentDAO) {
+        this.mPlaceCommentDAO = mPlaceCommentDAO;
     }
 
     @Autowired
@@ -50,8 +49,8 @@ public class TopicCommentDAOImpl {
     }
 
     @Autowired
-    public void setTopicDAO(TopicDAOImpl mTopicDAO) {
-        this.mTopicDAO = mTopicDAO;
+    public void setPlaceDAO(PlaceDAOImpl mPlaceDAO) {
+        this.mPlaceDAO = mPlaceDAO;
     }
 
     @Autowired
@@ -59,33 +58,33 @@ public class TopicCommentDAOImpl {
         this.mMessageSource = mMessageSource;
     }
 
-    public Page<TopicComment> getCommentByTopicId(int id, Pageable pageable, HttpServletRequest request) {
+    public Page<PlaceComment> getCommentByPlaceId(int placeId, Pageable pageable, HttpServletRequest request) {
         String token = request.getHeader(SecurityConstants.TOKEN_HEADER_NAME);
-        Page<TopicComment> topicComments = mTopicCommentDAO.findTopicCommentByTopicTopicIdOrderByPostTimeDesc(id, pageable);
+        Page<PlaceComment> placeComments = mPlaceCommentDAO.findByPlacePlaceIdOrderByCommentTimeDesc(placeId, pageable);
         if (!TextUtils.isEmpty(token)) {
             User user = mUserDAO.getUserByUsername(mTokenUtil.getUsernameFromToken(token));
-            for (TopicComment topicComment : topicComments) {
-                topicComment.setAllowDelete(user.equals(topicComment.getUser()) || user.getRole().getRoleValue().equals(UserRole.ADMIN));
+            for (PlaceComment comment : placeComments) {
+                comment.setAllowDelete(comment.getUser().equals(user) || user.isAdmin());
             }
         }
-        return topicComments;
+        return placeComments;
     }
 
-    public ResponseEntity<?> commentTopic(String content, int topicId, HttpServletRequest request) {
+    public ResponseEntity<?> commentPlace(String content, int placeId, HttpServletRequest request) {
         String token = request.getHeader(SecurityConstants.TOKEN_HEADER_NAME);
         boolean status;
         if (TextUtils.isEmpty(token)) {
             status = false;
         } else {
-            Topic topic = mTopicDAO.getTopicById(topicId);
+            Place place = mPlaceDAO.getPlaceById(placeId);
             User user = mUserDAO.getUserByUsername(mTokenUtil.getUsernameFromToken(token));
-            TopicComment topicComment = TopicComment.builder()
-                    .topic(topic)
+            PlaceComment placeComment = PlaceComment.builder()
                     .user(user)
                     .content(content)
-                    .postTime(new Timestamp(System.currentTimeMillis()))
+                    .commentTime(new Timestamp(System.currentTimeMillis()))
+                    .place(place)
                     .build();
-            status = mTopicCommentDAO.save(topicComment) != null;
+            status = mPlaceCommentDAO.save(placeComment) != null;
         }
         return ResponseEntity.ok(TopicCommentResponse.builder().status(status).build());
     }
@@ -102,23 +101,24 @@ public class TopicCommentDAOImpl {
         } else {
             User user = mUserDAO.getUserByUsername(mTokenUtil.getUsernameFromToken(token));
             if (user.isAdmin()) {
-                mTopicCommentDAO.delete(commentId);
+                mPlaceCommentDAO.delete(commentId);
                 status = true;
             } else if (user.getRole().containAuthority(UserAuthority.DELETE_OWN) && isUserComment(user.getUserId(), commentId)) {
-                mTopicCommentDAO.delete(commentId);
+                mPlaceCommentDAO.delete(commentId);
                 status = true;
             } else {
                 message = requestPermissionMessage;
                 status = false;
             }
         }
-        return ResponseEntity.ok(DeleteTopicCommentResponse.builder()
+        return ResponseEntity.ok(DeletePlaceCommentResponse.builder()
                 .message(message)
                 .status(status)
                 .build());
+
     }
 
     private boolean isUserComment(Long userId, int commentId) {
-        return mTopicCommentDAO.findTopicCommentByCommentIdAndUserUserId(commentId, userId) != null;
+        return mPlaceCommentDAO.findPlaceCommentByCommentIdAndUserUserId(commentId, userId) != null;
     }
 }

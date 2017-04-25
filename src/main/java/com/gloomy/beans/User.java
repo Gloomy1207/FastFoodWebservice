@@ -2,6 +2,7 @@ package com.gloomy.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.gloomy.security.UserRole;
 import lombok.*;
 import org.hibernate.validator.constraints.Email;
 
@@ -104,11 +105,6 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonIgnore
-    private Set<PlaceReply> placeReplies;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    @JsonIgnore
     private Set<Topic> topics;
 
     @Override
@@ -117,5 +113,11 @@ public class User {
             return Objects.equals(userId, ((User) obj).getUserId());
         }
         return super.equals(obj);
+    }
+
+    @Transient
+    @JsonIgnore
+    public boolean isAdmin() {
+        return role.getRoleValue().equals(UserRole.ADMIN);
     }
 }
