@@ -1,5 +1,6 @@
 package com.gloomy.beans;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +14,7 @@ import javax.persistence.*;
 @Table(name = "food_rating")
 @Setter
 @Getter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class FoodRating {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

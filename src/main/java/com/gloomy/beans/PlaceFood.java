@@ -1,6 +1,8 @@
 package com.gloomy.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,12 +16,14 @@ import javax.persistence.*;
 @Table(name = "place_food")
 @Setter
 @Getter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class PlaceFood {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @Column(name = "local_name")
+    @JsonProperty("local_name")
     private String localName;
 
     @ManyToOne(fetch = FetchType.LAZY)

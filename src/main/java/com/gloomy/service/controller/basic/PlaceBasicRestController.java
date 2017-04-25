@@ -4,12 +4,14 @@ import com.gloomy.beans.Place;
 import com.gloomy.beans.PlaceComment;
 import com.gloomy.impl.PlaceCommentDAOImpl;
 import com.gloomy.impl.PlaceDAOImpl;
+import com.gloomy.impl.PlaceFoodDAOImpl;
 import com.gloomy.impl.PlaceRatingDAOImpl;
 import com.gloomy.service.ApiMappingUrl;
 import com.gloomy.service.ApiParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,12 +30,14 @@ public class PlaceBasicRestController {
     private final PlaceDAOImpl mPlaceDAOImp;
     private final PlaceRatingDAOImpl mPlaceRatingDAO;
     private final PlaceCommentDAOImpl mPlaceCommentDAO;
+    private final PlaceFoodDAOImpl mPlaceFoodDAO;
 
     @Autowired
-    public PlaceBasicRestController(PlaceDAOImpl mPlaceDAOImp, PlaceRatingDAOImpl mPlaceRatingDAO, PlaceCommentDAOImpl mPlaceCommentDAO) {
+    public PlaceBasicRestController(PlaceDAOImpl mPlaceDAOImp, PlaceRatingDAOImpl mPlaceRatingDAO, PlaceCommentDAOImpl mPlaceCommentDAO, PlaceFoodDAOImpl mPlaceFoodDAO) {
         this.mPlaceDAOImp = mPlaceDAOImp;
         this.mPlaceRatingDAO = mPlaceRatingDAO;
         this.mPlaceCommentDAO = mPlaceCommentDAO;
+        this.mPlaceFoodDAO = mPlaceFoodDAO;
     }
 
     @GetMapping(value = ApiMappingUrl.HOME)
@@ -58,5 +62,12 @@ public class PlaceBasicRestController {
                                               Pageable pageable,
                                               HttpServletRequest request) {
         return mPlaceCommentDAO.getCommentByPlaceId(placeId, pageable, request);
+    }
+
+    @GetMapping(value = ApiMappingUrl.FOOD_ENDPOINT)
+    public ResponseEntity<?> getPlaceFood(@RequestParam(name = ApiParameter.PLACE_ID) int placeId,
+                                          Pageable pageable,
+                                          HttpServletRequest request) {
+        return mPlaceFoodDAO.getPlaceFoodByPlaceId(placeId, pageable, request);
     }
 }

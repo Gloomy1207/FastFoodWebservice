@@ -1,6 +1,7 @@
 package com.gloomy.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gloomy.utils.LocationUtil;
 import lombok.Getter;
@@ -19,6 +20,7 @@ import java.util.Set;
 @Getter
 @Entity
 @Table(name = "Food")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Food {
     @Id
     @Column(name = "food_id")
