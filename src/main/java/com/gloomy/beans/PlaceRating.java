@@ -2,8 +2,7 @@ package com.gloomy.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -15,7 +14,10 @@ import javax.persistence.*;
 @Table(name = "place_rating")
 @Getter
 @Setter
+@Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class PlaceRating {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,7 +33,7 @@ public class PlaceRating {
     private Place place;
 
     @Column(name = "star")
-    private int star;
+    private float star;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")

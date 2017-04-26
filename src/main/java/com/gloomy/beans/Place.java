@@ -105,7 +105,7 @@ public class Place {
             for (PlaceRating placeRating : placeRatings) {
                 point += placeRating.getStar();
             }
-            return point / placeRatings.size();
+            return (Math.round(point / placeRatings.size() * 100)) / 100.0f;
         }
         return 5;
     }
