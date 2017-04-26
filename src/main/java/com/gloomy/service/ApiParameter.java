@@ -23,4 +23,7 @@ public class ApiParameter {
     public static final String COMMENT_ID = "comment_id";
     public static final String PLACE_ID = "place_id";
     public static final String RATING_LIST = "list_rating";
+    public static final String LOCATION_ID = "location_id";
+    public static final String LOCATION_TYPE = "location_type";
+    public static final String CITY_ID = "city_id";
 }

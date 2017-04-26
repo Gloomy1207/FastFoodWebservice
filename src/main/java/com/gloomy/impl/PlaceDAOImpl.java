@@ -4,6 +4,7 @@ import com.gloomy.beans.LatLng;
 import com.gloomy.beans.Place;
 import com.gloomy.beans.User;
 import com.gloomy.dao.PlaceDAO;
+import com.gloomy.define.LocationType;
 import com.gloomy.security.SecurityConstants;
 import com.gloomy.service.controller.response.authenticated.LikeTopicResponse;
 import com.gloomy.utils.*;
@@ -118,5 +119,23 @@ public class PlaceDAOImpl {
 
     public Place getPlaceById(int placeId) {
         return mPlaceDAO.findByPlaceId(placeId);
+    }
+
+    public Page<Place> getLocationPlace(int locationId, int locationType, Pageable pageable, HttpServletRequest request) {
+        Page<Place> places;
+        if (locationType == LocationType.CITY) {
+            places = mPlaceDAO.findAllByPlaceAddressProvinceCityCityId(locationId, pageable);
+        } else if (locationType == LocationType.PROVINCE) {
+            places = mPlaceDAO.findAllByPlaceAddressProvinceProvinceId(locationId, pageable);
+        } else {
+            return null;
+        }
+        User user = UserUtil.getUserFromRequest(request, mUserDAO, mTokenUtil);
+        if (user != null) {
+            for (Place place : places) {
+                place.setFavorite(mUserFavoriteDAO.isFavoritePlace(user, place));
+            }
+        }
+        return places;
     }
 }

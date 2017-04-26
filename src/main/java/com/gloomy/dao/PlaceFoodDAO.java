@@ -15,4 +15,8 @@ import javax.transaction.Transactional;
 public interface PlaceFoodDAO extends JpaRepository<PlaceFood, Integer> {
 
     Page<PlaceFood> findAllByPlacePlaceId(int placeId, Pageable pageable);
+
+    Page<PlaceFood> findAllByPlace_PlaceAddress_ProvinceProvinceId(int provinceId, Pageable pageable);
+
+    Page<PlaceFood> findAllByPlace_PlaceAddress_Province_CityCityId(int cityId, Pageable pageable);
 }

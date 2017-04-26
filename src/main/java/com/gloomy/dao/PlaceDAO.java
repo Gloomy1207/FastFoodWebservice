@@ -1,6 +1,8 @@
 package com.gloomy.dao;
 
 import com.gloomy.beans.Place;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -25,4 +27,8 @@ public interface PlaceDAO extends JpaRepository<Place, Integer> {
     Set<Place> searchWithoutTime(String keyword);
 
     Place findByPlaceId(int placeId);
+
+    Page<Place> findAllByPlaceAddressProvinceProvinceId(int provinceId, Pageable pageable);
+
+    Page<Place> findAllByPlaceAddressProvinceCityCityId(int cityId, Pageable pageable);
 }
