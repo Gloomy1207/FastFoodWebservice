@@ -65,6 +65,8 @@ public class PlaceFoodDAOImpl {
         for (PlaceFood placeFood : placeFoods) {
             foods.add(placeFood.getFood());
         }
-        return new PageImpl<>(foods);
+        int start = pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > foods.size() ? foods.size() : (start + pageable.getPageSize());
+        return new PageImpl<>(foods.subList(start, end), pageable, foods.size());
     }
 }

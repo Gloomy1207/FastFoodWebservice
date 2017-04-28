@@ -51,4 +51,5 @@ public class ApiMappingUrl {
     public static final String LIKE = "/like";
     public static final String DELETE_COMMENT = "/delete-comment";
     public static final String PROVINCE = "/province";
+    public static final String FIND = "/find";
 }

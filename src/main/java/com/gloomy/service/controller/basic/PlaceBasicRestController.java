@@ -70,4 +70,10 @@ public class PlaceBasicRestController {
                                           HttpServletRequest request) {
         return mPlaceFoodDAO.getPlaceFoodByPlaceId(placeId, pageable, request);
     }
+
+    @GetMapping(value = ApiMappingUrl.FIND)
+    public ResponseEntity<?> getPlaceById(@RequestParam(name = ApiParameter.PLACE_ID) int placeId,
+                                          HttpServletRequest request) {
+        return mPlaceDAOImp.getPlaceByPlaceId(placeId, request);
+    }
 }

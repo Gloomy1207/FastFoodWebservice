@@ -3,12 +3,13 @@ package com.gloomy.service.controller.authenticated;
 import com.gloomy.beans.Topic;
 import com.gloomy.impl.UserDAOImpl;
 import com.gloomy.service.ApiMappingUrl;
-import com.gloomy.service.ApiParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,13 +26,6 @@ public class UserAuthenticatedController {
     @Autowired
     public UserAuthenticatedController(UserDAOImpl userDAO) {
         this.mUserDAO = userDAO;
-    }
-
-    @GetMapping(value = ApiMappingUrl.MY_PROFILE_ENDPOINT)
-    @ResponseBody
-    public ResponseEntity<?> getProfile(@RequestParam(value = ApiParameter.USERNAME, required = false) String username,
-                                        HttpServletRequest request) {
-        return ResponseEntity.ok(mUserDAO.getUserProfile(username, request));
     }
 
     @GetMapping(value = ApiMappingUrl.USER_FAVORITE)

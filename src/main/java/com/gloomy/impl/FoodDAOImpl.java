@@ -29,7 +29,7 @@ public class FoodDAOImpl {
         this.mFoodDAO = mFoodDAO;
     }
 
-    public List<Food> getNearFood(@Nullable LatLng latLng) {
+    private List<Food> getNearFood(@Nullable LatLng latLng) {
         if (latLng == null) {
             return mFoodDAO.findAll();
         }
@@ -49,7 +49,9 @@ public class FoodDAOImpl {
         Page<Food> foods;
         LatLng latLng = GeoIPUtil.createLatLngFromIp(lat, lng, request);
         List<Food> nearFoods = getNearFood(latLng);
-        foods = new PageImpl<>(nearFoods, pageable, nearFoods.size());
+        int start = pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > nearFoods.size() ? nearFoods.size() : (start + pageable.getPageSize());
+        foods = new PageImpl<>(nearFoods.subList(start, end), pageable, nearFoods.size());
         return foods;
     }
 

@@ -1,8 +1,10 @@
 package com.gloomy.service.controller.basic;
 
 import com.gloomy.beans.FoodImage;
+import com.gloomy.beans.PlaceImage;
 import com.gloomy.beans.TopicImage;
 import com.gloomy.impl.FoodImageDAOImpl;
+import com.gloomy.impl.PlaceImageDAOImpl;
 import com.gloomy.impl.TopicImageDAOImpl;
 import com.gloomy.service.ApiMappingUrl;
 import com.gloomy.service.ApiParameter;
@@ -23,11 +25,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class ImageBasicRestController {
     private final FoodImageDAOImpl mFoodImageDAO;
     private final TopicImageDAOImpl mTopicImageDAO;
+    private final PlaceImageDAOImpl mPlaceImageDAO;
 
     @Autowired
-    public ImageBasicRestController(FoodImageDAOImpl mFoodImageDAO, TopicImageDAOImpl mTopicImageDAO) {
+    public ImageBasicRestController(FoodImageDAOImpl mFoodImageDAO, TopicImageDAOImpl mTopicImageDAO, PlaceImageDAOImpl mPlaceImageDAO) {
         this.mFoodImageDAO = mFoodImageDAO;
         this.mTopicImageDAO = mTopicImageDAO;
+        this.mPlaceImageDAO = mPlaceImageDAO;
     }
 
     @GetMapping(value = ApiMappingUrl.FOOD_ENDPOINT)
@@ -40,5 +44,11 @@ public class ImageBasicRestController {
     public Page<TopicImage> getTopicImages(@RequestParam(ApiParameter.TOPIC_ID) int topicId,
                                            Pageable pageable) {
         return mTopicImageDAO.getImagesByTopicId(topicId, pageable);
+    }
+
+    @GetMapping(ApiMappingUrl.PLACE_ENDPOINT)
+    public Page<PlaceImage> getPlaceImages(@RequestParam(ApiParameter.PLACE_ID) int placeId,
+                                           Pageable pageable) {
+        return mPlaceImageDAO.getPlaceImageByPlaceId(placeId, pageable);
     }
 }

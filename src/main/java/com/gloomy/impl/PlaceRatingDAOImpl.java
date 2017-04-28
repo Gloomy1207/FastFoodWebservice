@@ -72,7 +72,9 @@ public class PlaceRatingDAOImpl {
         for (PlaceRating placeRating : placeRatings) {
             places.add(placeRating.getPlace());
         }
-        return new PageImpl<>(places, pageable, places.size());
+        int start = pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > places.size() ? places.size() : (start + pageable.getPageSize());
+        return new PageImpl<>(places.subList(start, end), pageable, places.size());
     }
 
     public ResponseEntity<?> ratingPlace(PlaceRatingRequest ratingRequest, HttpServletRequest request) {

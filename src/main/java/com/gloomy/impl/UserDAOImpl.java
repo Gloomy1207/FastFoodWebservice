@@ -64,9 +64,11 @@ public class UserDAOImpl {
             List<Place> places = new ArrayList<>();
             places.addAll(user.getUserFavoritePlaces());
             if (!places.isEmpty()) {
+                int start = pageable.getOffset();
+                int end = (start + pageable.getPageSize()) > places.size() ? places.size() : (start + pageable.getPageSize());
                 response = UserFavoriteResponse.builder()
                         .status(true)
-                        .places(new PageImpl<>(places, pageable, places.size()))
+                        .places(new PageImpl<>(places.subList(start, end), pageable, places.size()))
                         .build();
             } else {
                 String emptyFavorite = mMessageSource.getMessage("message.favoriteEmpty", null, request.getLocale());
@@ -153,7 +155,9 @@ public class UserDAOImpl {
         String token = request.getHeader(SecurityConstants.TOKEN_HEADER_NAME);
         User user = mUserDAO.findUserByUsername(mTokenUtil.getUsernameFromToken(token));
         List<Topic> topics = new ArrayList<>(user.getTopics());
-        return new PageImpl<>(topics, pageable, topics.size());
+        int start = pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > topics.size() ? topics.size() : (start + pageable.getPageSize());
+        return new PageImpl<>(topics.subList(start, end), pageable, topics.size());
     }
 
     public User getUserByFacebook(String email, String facebookId) {

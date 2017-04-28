@@ -7,8 +7,10 @@ import com.gloomy.dao.PlaceDAO;
 import com.gloomy.define.LocationType;
 import com.gloomy.security.SecurityConstants;
 import com.gloomy.service.controller.response.authenticated.LikeTopicResponse;
+import com.gloomy.service.controller.response.basic.FindStoreResponse;
 import com.gloomy.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +32,7 @@ public class PlaceDAOImpl {
     private UserDAOImpl mUserDAO;
     private JwtTokenUtil mTokenUtil;
     private UserFavoriteDAOImpl mUserFavoriteDAO;
+    private MessageSource mMessageSource;
 
     @Autowired
     public void setPlaceDAO(PlaceDAO mPlaceDAO) {
@@ -49,6 +52,11 @@ public class PlaceDAOImpl {
     @Autowired
     public void setUserFavoriteDAO(UserFavoriteDAOImpl mUserFavoriteDAO) {
         this.mUserFavoriteDAO = mUserFavoriteDAO;
+    }
+
+    @Autowired
+    public void setMessageSource(MessageSource mMessageSource) {
+        this.mMessageSource = mMessageSource;
     }
 
     public Page<Place> findAllPageable(Pageable pageable, HttpServletRequest request) {
@@ -88,7 +96,9 @@ public class PlaceDAOImpl {
     public Page<Place> findNearPlacePageable(Double lat, Double lng, HttpServletRequest request, Pageable pageable) {
         LatLng latLng = GeoIPUtil.createLatLngFromIp(lat, lng, request);
         List<Place> nearPlace = findAllNearPlace(latLng, request);
-        return new PageImpl<>(nearPlace, pageable, nearPlace.size());
+        int start = pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > nearPlace.size() ? nearPlace.size() : (start + pageable.getPageSize());
+        return new PageImpl<>(nearPlace.subList(start, end), pageable, nearPlace.size());
     }
 
     public Set<Place> searchPlace(String keyword, HttpServletRequest request) {
@@ -137,5 +147,20 @@ public class PlaceDAOImpl {
             }
         }
         return places;
+    }
+
+    public ResponseEntity<?> getPlaceByPlaceId(int placeId, HttpServletRequest request) {
+        Place place = mPlaceDAO.findByPlaceId(placeId);
+        boolean status = true;
+        String message = null;
+        if (place == null) {
+            status = false;
+            message = mMessageSource.getMessage("message.storeNotExist", null, request.getLocale());
+        }
+        return ResponseEntity.ok(FindStoreResponse.builder()
+                .place(place)
+                .message(message)
+                .status(status)
+                .build());
     }
 }
