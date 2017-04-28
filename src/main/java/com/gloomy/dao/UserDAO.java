@@ -24,7 +24,7 @@ public interface UserDAO extends JpaRepository<User, Integer> {
 
     @Query("SELECT u FROM User u WHERE (u.email LIKE LOWER(CONCAT('%', ?1, '%') ) ) OR " +
             "(u.username LIKE LOWER(CONCAT('%', ?1, '%') ) ) OR " +
-            "(u.fullname LIKE LOWER(CONCAT('%', ?1, '%') ) ) OR " +
+            "(u.fullName LIKE LOWER(CONCAT('%', ?1, '%') ) ) OR " +
             "(u.description LIKE LOWER(CONCAT('%', ?1, '%') ) )")
     Set<User> search(String keyword);
 

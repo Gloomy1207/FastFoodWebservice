@@ -14,7 +14,7 @@ public class JwtUserFactory {
         return new JwtUser(user.getUserId(),
                 user.getUsername(),
                 user.getPassword(),
-                user.getFullname(),
+                user.getFullName(),
                 user.getRole());
     }
 }
