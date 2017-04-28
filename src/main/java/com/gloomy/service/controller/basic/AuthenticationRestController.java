@@ -198,7 +198,7 @@ public class AuthenticationRestController {
         }
         User user = verificationToken.getUser();
         user.setEnabled(true);
-        mUserDAO.save(user);
+        mUserDAO.saveUser(user);
         mVerificationDAO.deleteItem(verificationToken);
         String success = mMessageSource.getMessage("message.confirmationSuccess", null, request.getLocale());
         return ResponseEntity.ok(RegistrationConfirmResponse.builder().message(success).status(true).build());

@@ -8,6 +8,7 @@ import com.gloomy.dao.UserDAO;
 import com.gloomy.security.SecurityConstants;
 import com.gloomy.service.controller.response.UserProfileResponse;
 import com.gloomy.service.controller.response.authenticated.UserFavoriteResponse;
+import com.gloomy.service.storage.StorageService;
 import com.gloomy.utils.JwtTokenUtil;
 import com.gloomy.utils.TextUtils;
 import com.gloomy.utils.UserUtil;
@@ -35,6 +36,7 @@ public class UserDAOImpl {
     private RoleDAOImpl mRoleDAO;
     private MessageSource mMessageSource;
     private BCryptPasswordEncoder mBCryptPasswordEncoder = new BCryptPasswordEncoder();
+    private StorageService mStorageService;
 
     @Autowired
     public void setUserDAO(UserDAO mUserDAO) {
@@ -54,6 +56,11 @@ public class UserDAOImpl {
     @Autowired
     public void setMessageSource(MessageSource mMessageSource) {
         this.mMessageSource = mMessageSource;
+    }
+
+    @Autowired
+    public void setStorageService(StorageService mStorageService) {
+        this.mStorageService = mStorageService;
     }
 
     public UserFavoriteResponse getUserFavoritePlace(HttpServletRequest request, Pageable pageable) {
@@ -115,7 +122,7 @@ public class UserDAOImpl {
         return mUserDAO.findUserByEmail(email);
     }
 
-    public void save(User user) {
+    public void saveUser(User user) {
         mUserDAO.save(user);
     }
 
@@ -169,10 +176,11 @@ public class UserDAOImpl {
         User user = User.builder()
                 .facebookAccessToken(facebookToken)
                 .facebookId(facebookId)
-                .fullname(name)
+                .fullName(name)
                 .email(email)
                 .username(email)
                 .role(role)
+                .enabled(true)
                 .avatar(avatar)
                 .build();
         return mUserDAO.save(user);

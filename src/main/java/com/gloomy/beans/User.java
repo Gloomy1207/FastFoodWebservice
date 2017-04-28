@@ -2,6 +2,7 @@ package com.gloomy.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gloomy.security.UserRole;
 import lombok.*;
 import org.hibernate.validator.constraints.Email;
@@ -58,7 +59,8 @@ public class User {
     private String email;
 
     @Column(name = "fullname")
-    private String fullname;
+    @JsonProperty("full_name")
+    private String fullName;
 
     @Column(name = "description")
     private String description;

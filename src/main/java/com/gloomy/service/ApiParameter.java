@@ -26,4 +26,5 @@ public class ApiParameter {
     public static final String LOCATION_ID = "location_id";
     public static final String LOCATION_TYPE = "location_type";
     public static final String CITY_ID = "city_id";
+    public static final String BODY = "body";
 }
