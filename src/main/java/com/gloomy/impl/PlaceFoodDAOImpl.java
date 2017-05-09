@@ -5,6 +5,7 @@ import com.gloomy.beans.PlaceFood;
 import com.gloomy.dao.PlaceFoodDAO;
 import com.gloomy.define.LocationType;
 import com.gloomy.service.controller.response.basic.PlaceFoodResponse;
+import com.gloomy.utils.TextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -68,5 +69,22 @@ public class PlaceFoodDAOImpl {
         int start = pageable.getOffset();
         int end = (start + pageable.getPageSize()) > foods.size() ? foods.size() : (start + pageable.getPageSize());
         return new PageImpl<>(foods.subList(start, end), pageable, foods.size());
+    }
+
+    public List<Food> searchFood(String keyword) {
+        List<Food> foods = new ArrayList<>();
+        if (TextUtils.isNumber(keyword)) {
+            List<PlaceFood> placeFoods = mPlaceFoodDAO.search(Double.parseDouble(keyword));
+            addFoodFromFoodPrice(foods, placeFoods);
+        }
+        return foods;
+    }
+
+    private void addFoodFromFoodPrice(List<Food> foods, List<PlaceFood> placeFoods) {
+        for (PlaceFood placeFood : placeFoods) {
+            if (!foods.contains(placeFood.getFood())) {
+                foods.add(placeFood.getFood());
+            }
+        }
     }
 }

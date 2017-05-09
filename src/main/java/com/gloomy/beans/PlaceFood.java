@@ -34,4 +34,8 @@ public class PlaceFood {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "food_id")
     private Food food;
+
+    @Column(name = "price")
+    @JsonProperty("price")
+    private double price;
 }

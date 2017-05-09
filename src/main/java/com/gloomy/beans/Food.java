@@ -55,11 +55,6 @@ public class Food {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "food_id")
     @JsonIgnore
-    private Set<FoodPrice> prices;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "food_id")
-    @JsonIgnore
     private Set<PlaceFood> placeFoods;
 
     public float getRating() {

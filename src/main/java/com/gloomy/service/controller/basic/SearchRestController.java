@@ -1,9 +1,6 @@
 package com.gloomy.service.controller.basic;
 
-import com.gloomy.beans.Food;
-import com.gloomy.beans.Place;
-import com.gloomy.beans.Topic;
-import com.gloomy.beans.User;
+import com.gloomy.beans.*;
 import com.gloomy.impl.*;
 import com.gloomy.service.ApiMappingUrl;
 import com.gloomy.service.ApiParameter;
@@ -34,25 +31,25 @@ public class SearchRestController {
 
     private final TopicDAOImpl mTopicDAO;
 
-    private final FoodPriceDAOImpl mFoodPriceDAO;
-
     private final PlaceTypeDAOImpl mPlaceTypeDAO;
 
+    private final PlaceFoodDAOImpl mPlaceFoodDAO;
+
     @Autowired
-    public SearchRestController(FoodDAOImpl mFoodDAO, UserDAOImpl mUserDAO, PlaceDAOImpl mPlaceDAO, TopicDAOImpl mTopicDAO, FoodPriceDAOImpl mFoodPriceDAO, PlaceTypeDAOImpl mPlaceTypeDAO) {
+    public SearchRestController(FoodDAOImpl mFoodDAO, UserDAOImpl mUserDAO, PlaceDAOImpl mPlaceDAO, TopicDAOImpl mTopicDAO, PlaceTypeDAOImpl mPlaceTypeDAO, PlaceFoodDAOImpl mPlaceFoodDAO) {
         this.mFoodDAO = mFoodDAO;
         this.mUserDAO = mUserDAO;
         this.mPlaceDAO = mPlaceDAO;
         this.mTopicDAO = mTopicDAO;
-        this.mFoodPriceDAO = mFoodPriceDAO;
         this.mPlaceTypeDAO = mPlaceTypeDAO;
+        this.mPlaceFoodDAO = mPlaceFoodDAO;
     }
 
     @GetMapping(value = ApiMappingUrl.SEARCH)
     public ResponseEntity<?> searchKeyword(@RequestParam(name = ApiParameter.KEYWORD) String keyword,
                                            HttpServletRequest request) {
         Set<Food> foods = mFoodDAO.searchFood(keyword);
-        foods.addAll(mFoodPriceDAO.searchFood(keyword));
+        foods.addAll(mPlaceFoodDAO.searchFood(keyword));
         Set<User> peoples = mUserDAO.searchUser(keyword);
         Set<Place> stores = mPlaceDAO.searchPlace(keyword, request);
         stores.addAll(mPlaceTypeDAO.searchPlace(keyword));
